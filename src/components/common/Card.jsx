@@ -1,5 +1,6 @@
 const Card = ({
   children,
+  title,
   header,
   footer,
   image,
@@ -11,6 +12,7 @@ const Card = ({
   onClick,
 }) => {
   const isClickable = !!onClick || hoverable;
+  const displayHeader = title || header;
 
   return (
     <div
@@ -34,12 +36,12 @@ const Card = ({
         </div>
       )}
 
-      {header && (
+      {displayHeader && (
         <div className="px-6 py-4 border-b border-gray-200">
-          {typeof header === 'string' ? (
-            <h3 className="text-lg font-semibold text-gray-900">{header}</h3>
+          {typeof displayHeader === 'string' ? (
+            <h3 className="text-lg font-semibold text-gray-900">{displayHeader}</h3>
           ) : (
-            header
+            displayHeader
           )}
         </div>
       )}

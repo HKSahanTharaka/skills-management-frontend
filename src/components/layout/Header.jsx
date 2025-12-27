@@ -3,6 +3,7 @@ import { Menu, LogOut, User, Settings, Bell } from 'lucide-react';
 import { useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { useAppStore } from '../../store/appStore';
+import RoleBadge from '../common/RoleBadge';
 
 const Header = () => {
   const { user, logout } = useAuthStore();
@@ -50,7 +51,9 @@ const Header = () => {
               </div>
               <div className="hidden sm:block text-left">
                 <p className="text-sm font-medium text-gray-700">{user?.email}</p>
-                <p className="text-xs text-gray-500 capitalize">{user?.role || 'User'}</p>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <RoleBadge role={user?.role} />
+                </div>
               </div>
             </button>
 

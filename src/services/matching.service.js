@@ -1,8 +1,8 @@
 import api from './api';
 
 export const matchingService = {
-  async findMatchingPersonnel(data) {
-    const response = await api.post('/matching/find-personnel', data);
+  async findMatchingPersonnel(projectId) {
+    const response = await api.get(`/matching/project/${projectId}`);
     return response.data;
   },
 };
@@ -37,6 +37,11 @@ export const allocationService = {
 
   async getByProjectId(projectId) {
     const response = await api.get(`/allocations/project/${projectId}`);
+    return response.data;
+  },
+
+  async getPersonnelUtilization(personnelId) {
+    const response = await api.get(`/allocations/personnel/${personnelId}/utilization`);
     return response.data;
   },
 

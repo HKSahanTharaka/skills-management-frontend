@@ -3,10 +3,17 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { useAuthStore } from './store/authStore';
-import { ProtectedRoute } from './components/common/ProtectedRoute';
-import { Layout } from './components/layout/Layout';
+import ProtectedRoute from './components/common/ProtectedRoute';
+import Layout from './components/layout/Layout';
 import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
 import Dashboard from './pages/Dashboard';
+import PersonnelPage from './pages/PersonnelPage';
+import SkillsPage from './pages/SkillsPage';
+import ProjectsPage from './pages/ProjectsPage';
+import ProjectDetailPage from './pages/ProjectDetailPage';
+import MatchingPage from './pages/MatchingPage';
+import AvailabilityPage from './pages/AvailabilityPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,6 +48,7 @@ function App() {
           />
           
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           
           <Route
             path="/dashboard"
@@ -58,10 +66,7 @@ function App() {
             element={
               <ProtectedRoute>
                 <Layout>
-                  <div className="p-6">
-                    <h1 className="text-3xl font-bold text-gray-900">Personnel Management</h1>
-                    <p className="mt-2 text-gray-600">Coming soon...</p>
-                  </div>
+                  <PersonnelPage />
                 </Layout>
               </ProtectedRoute>
             }
@@ -72,10 +77,7 @@ function App() {
             element={
               <ProtectedRoute>
                 <Layout>
-                  <div className="p-6">
-                    <h1 className="text-3xl font-bold text-gray-900">Skills Management</h1>
-                    <p className="mt-2 text-gray-600">Coming soon...</p>
-                  </div>
+                  <SkillsPage />
                 </Layout>
               </ProtectedRoute>
             }
@@ -86,10 +88,18 @@ function App() {
             element={
               <ProtectedRoute>
                 <Layout>
-                  <div className="p-6">
-                    <h1 className="text-3xl font-bold text-gray-900">Projects Management</h1>
-                    <p className="mt-2 text-gray-600">Coming soon...</p>
-                  </div>
+                  <ProjectsPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/projects/:id"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <ProjectDetailPage />
                 </Layout>
               </ProtectedRoute>
             }
@@ -100,10 +110,7 @@ function App() {
             element={
               <ProtectedRoute>
                 <Layout>
-                  <div className="p-6">
-                    <h1 className="text-3xl font-bold text-gray-900">Personnel Matching</h1>
-                    <p className="mt-2 text-gray-600">Coming soon...</p>
-                  </div>
+                  <MatchingPage />
                 </Layout>
               </ProtectedRoute>
             }
@@ -114,10 +121,7 @@ function App() {
             element={
               <ProtectedRoute>
                 <Layout>
-                  <div className="p-6">
-                    <h1 className="text-3xl font-bold text-gray-900">Availability & Allocations</h1>
-                    <p className="mt-2 text-gray-600">Coming soon...</p>
-                  </div>
+                  <AvailabilityPage />
                 </Layout>
               </ProtectedRoute>
             }
