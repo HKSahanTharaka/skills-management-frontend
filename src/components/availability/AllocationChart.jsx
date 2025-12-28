@@ -23,13 +23,13 @@ const AllocationChart = ({ allocations }) => {
 
   const getColorForProject = (projectId, index) => {
     const colors = [
-      'bg-blue-500',
+      'bg-primary-500',
       'bg-green-500',
       'bg-purple-500',
-      'bg-yellow-500',
+      'bg-warning-500',
       'bg-pink-500',
       'bg-indigo-500',
-      'bg-red-500',
+      'bg-danger-500',
       'bg-teal-500',
     ];
     return colors[index % colors.length];
@@ -100,9 +100,8 @@ const AllocationChart = ({ allocations }) => {
                       return (
                         <div
                           key={month.toISOString()}
-                          className={`flex-1 min-w-32 p-3 border-l border-gray-200 ${
-                            isOverAllocated ? 'bg-red-50' : ''
-                          }`}
+                          className={`flex-1 min-w-32 p-3 border-l border-gray-200 ${isOverAllocated ? 'bg-red-50' : ''
+                            }`}
                         >
                           {projects.length > 0 ? (
                             <div className="space-y-1">
@@ -131,7 +130,7 @@ const AllocationChart = ({ allocations }) => {
                               })}
                               {isOverAllocated && (
                                 <Badge variant="red" size="sm" className="w-full">
-                                  {total}% 
+                                  {total}%
                                 </Badge>
                               )}
                             </div>

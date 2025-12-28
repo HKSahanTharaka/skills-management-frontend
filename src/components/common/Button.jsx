@@ -21,18 +21,18 @@ const Button = forwardRef(
 
     const variants = {
       primary:
-        'bg-primary-600 text-gray-900 hover:bg-primary-700 focus:ring-primary-500 shadow-sm hover:shadow-md',
+        'bg-primary-600 dark:bg-primary-500 text-white hover:bg-primary-700 dark:hover:bg-primary-600 focus:ring-primary-500 shadow-sm hover:shadow-md',
       secondary:
-        'bg-secondary-100 text-secondary-900 hover:bg-secondary-200 focus:ring-secondary-500',
+        'bg-secondary-100 dark:bg-secondary-800 text-secondary-900 dark:text-secondary-100 hover:bg-secondary-200 dark:hover:bg-secondary-700 focus:ring-secondary-500',
       danger:
-        'bg-danger-600 text-gray-900 hover:bg-danger-700 focus:ring-danger-500 shadow-sm hover:shadow-md',
+        'bg-danger-600 dark:bg-danger-500 text-white hover:bg-danger-700 dark:hover:bg-danger-600 focus:ring-danger-500 shadow-sm hover:shadow-md',
       success:
-        'bg-success-600 text-gray-900 hover:bg-success-700 focus:ring-success-500 shadow-sm hover:shadow-md',
+        'bg-success-600 dark:bg-success-500 text-white hover:bg-success-700 dark:hover:bg-success-600 focus:ring-success-500 shadow-sm hover:shadow-md',
       warning:
-        'bg-warning-600 text-gray-900 hover:bg-warning-700 focus:ring-warning-500 shadow-sm hover:shadow-md',
-      ghost: 'hover:bg-gray-100 text-gray-700 focus:ring-gray-500',
+        'bg-warning-600 dark:bg-warning-500 text-white hover:bg-warning-700 dark:hover:bg-warning-600 focus:ring-warning-500 shadow-sm hover:shadow-md',
+      ghost: 'hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 focus:ring-gray-500',
       outline:
-        'border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 focus:ring-gray-500 shadow-sm',
+        'border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-300 focus:ring-gray-500 shadow-sm',
     };
 
     const sizes = {

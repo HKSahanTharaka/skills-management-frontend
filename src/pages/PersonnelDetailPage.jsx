@@ -18,7 +18,7 @@ const PersonnelDetailPage = () => {
   const permissions = usePermissions();
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  
+
   const { data: response, isLoading } = usePersonnelDetail(id);
   const personnel = response?.data;
   const updateMutation = useUpdatePersonnel();
@@ -148,8 +148,8 @@ const PersonnelDetailPage = () => {
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-50 rounded-lg">
-                  <Calendar className="h-5 w-5 text-blue-600" />
+                <div className="p-2 bg-primary-50 rounded-lg">
+                  <Calendar className="h-5 w-5 text-primary-600" />
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Joined</p>

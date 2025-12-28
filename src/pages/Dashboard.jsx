@@ -8,7 +8,7 @@ import { useProjects } from '../hooks/useProjects';
 
 export const Dashboard = () => {
   const navigate = useNavigate();
-  
+
   // Fetch data - fetch all for accurate counts
   const { data: personnelData, isLoading: isLoadingPersonnel } = usePersonnel({ limit: 100 });
   const { data: skillsData, isLoading: isLoadingSkills } = useSkills({ limit: 100 });
@@ -29,8 +29,8 @@ export const Dashboard = () => {
       label: 'Total Personnel',
       value: totalPersonnel,
       icon: Users,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100',
+      color: 'text-primary-600',
+      bgColor: 'bg-primary-100',
     },
     {
       label: 'Active Projects',
@@ -63,8 +63,8 @@ export const Dashboard = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="mt-2 text-gray-600">Welcome back! Here's an overview of your system.</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Dashboard</h1>
+        <p className="mt-2 text-gray-600 dark:text-slate-400">Welcome back! Here's an overview of your system.</p>
       </div>
 
       {/* Stats Grid */}
@@ -75,8 +75,8 @@ export const Dashboard = () => {
             <Card key={stat.label} className="hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600 mb-1">{stat.label}</p>
-                  <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+                  <p className="text-sm font-medium text-gray-600 dark:text-slate-400 mb-1">{stat.label}</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-slate-100">{stat.value}</p>
                 </div>
                 <div className={`h-12 w-12 ${stat.bgColor} rounded-xl flex items-center justify-center`}>
                   <Icon className={`h-6 w-6 ${stat.color}`} />
@@ -92,29 +92,29 @@ export const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <button
             onClick={() => navigate('/personnel')}
-            className="p-4 text-left border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-all"
+            className="p-4 text-left border border-gray-200 dark:border-slate-700 rounded-lg hover:border-primary-300 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all"
           >
-            <Users className="h-8 w-8 text-blue-600 mb-2" />
-            <h3 className="font-semibold text-gray-900">Add Personnel</h3>
-            <p className="text-sm text-gray-600 mt-1">Add a new team member</p>
+            <Users className="h-8 w-8 text-primary-600 dark:text-primary-400 mb-2" />
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100">Add Personnel</h3>
+            <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">Add a new team member</p>
           </button>
-          
+
           <button
             onClick={() => navigate('/projects')}
-            className="p-4 text-left border border-gray-200 rounded-lg hover:border-green-300 hover:bg-green-50 transition-all"
+            className="p-4 text-left border border-gray-200 dark:border-slate-700 rounded-lg hover:border-green-300 dark:hover:border-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all"
           >
-            <Briefcase className="h-8 w-8 text-green-600 mb-2" />
-            <h3 className="font-semibold text-gray-900">Create Project</h3>
-            <p className="text-sm text-gray-600 mt-1">Start a new project</p>
+            <Briefcase className="h-8 w-8 text-green-600 dark:text-green-400 mb-2" />
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100">Create Project</h3>
+            <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">Start a new project</p>
           </button>
-          
+
           <button
             onClick={() => navigate('/skills')}
-            className="p-4 text-left border border-gray-200 rounded-lg hover:border-purple-300 hover:bg-purple-50 transition-all"
+            className="p-4 text-left border border-gray-200 dark:border-slate-700 rounded-lg hover:border-purple-300 dark:hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all"
           >
-            <Award className="h-8 w-8 text-purple-600 mb-2" />
-            <h3 className="font-semibold text-gray-900">Add Skill</h3>
-            <p className="text-sm text-gray-600 mt-1">Add a new skill to the system</p>
+            <Award className="h-8 w-8 text-purple-600 dark:text-purple-400 mb-2" />
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100">Add Skill</h3>
+            <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">Add a new skill to the system</p>
           </button>
         </div>
       </Card>
@@ -124,16 +124,16 @@ export const Dashboard = () => {
         <Card header="Projects Overview">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Total Projects</span>
-              <span className="font-semibold text-gray-900">{totalProjects}</span>
+              <span className="text-sm text-gray-600 dark:text-slate-400">Total Projects</span>
+              <span className="font-semibold text-gray-900 dark:text-slate-100">{totalProjects}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Active Projects</span>
-              <span className="font-semibold text-green-600">{activeProjects}</span>
+              <span className="text-sm text-gray-600 dark:text-slate-400">Active Projects</span>
+              <span className="font-semibold text-green-600 dark:text-green-400">{activeProjects}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Completed Projects</span>
-              <span className="font-semibold text-gray-900">{completedProjects}</span>
+              <span className="text-sm text-gray-600 dark:text-slate-400">Completed Projects</span>
+              <span className="font-semibold text-gray-900 dark:text-slate-100">{completedProjects}</span>
             </div>
           </div>
         </Card>
@@ -141,16 +141,16 @@ export const Dashboard = () => {
         <Card header="System Overview">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Total Personnel</span>
-              <span className="font-semibold text-gray-900">{totalPersonnel}</span>
+              <span className="text-sm text-gray-600 dark:text-slate-400">Total Personnel</span>
+              <span className="font-semibold text-gray-900 dark:text-slate-100">{totalPersonnel}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Total Skills</span>
-              <span className="font-semibold text-gray-900">{totalSkills}</span>
+              <span className="text-sm text-gray-600 dark:text-slate-400">Total Skills</span>
+              <span className="font-semibold text-gray-900 dark:text-slate-100">{totalSkills}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Planning Projects</span>
-              <span className="font-semibold text-gray-900">{planningProjects}</span>
+              <span className="text-sm text-gray-600 dark:text-slate-400">Planning Projects</span>
+              <span className="font-semibold text-gray-900 dark:text-slate-100">{planningProjects}</span>
             </div>
           </div>
         </Card>

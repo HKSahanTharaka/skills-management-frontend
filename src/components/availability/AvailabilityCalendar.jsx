@@ -25,7 +25,7 @@ const AvailabilityCalendar = ({ personnelId, availabilityData, onAddPeriod, onEd
 
   const getAvailabilityForDate = (date) => {
     if (!availabilityData) return null;
-    
+
     return availabilityData.find((period) => {
       const start = new Date(period.start_date);
       const end = new Date(period.end_date);
@@ -128,7 +128,7 @@ const AvailabilityCalendar = ({ personnelId, availabilityData, onAddPeriod, onEd
             {Array.from({ length: monthStart.getDay() }).map((_, index) => (
               <div key={`empty-${index}`} className="p-2 border-r border-b border-gray-200 bg-gray-50" />
             ))}
-            
+
             {daysInMonth.map((day) => {
               const availability = getAvailabilityForDate(day);
               const isToday = isSameDay(day, new Date());
@@ -136,12 +136,11 @@ const AvailabilityCalendar = ({ personnelId, availabilityData, onAddPeriod, onEd
               return (
                 <div
                   key={day.toISOString()}
-                  className={`p-2 border-r border-b border-gray-200 min-h-20 ${
-                    !isSameMonth(day, currentDate) ? 'bg-gray-50' : ''
-                  } ${isToday ? 'bg-blue-50' : ''}`}
+                  className={`p-2 border-r border-b border-gray-200 min-h-20 ${!isSameMonth(day, currentDate) ? 'bg-gray-50' : ''
+                    } ${isToday ? 'bg-primary-50' : ''}`}
                 >
                   <div className="flex flex-col h-full">
-                    <span className={`text-sm ${isToday ? 'font-bold text-blue-600' : 'text-gray-700'}`}>
+                    <span className={`text-sm ${isToday ? 'font-bold text-primary-600' : 'text-gray-700'}`}>
                       {format(day, 'd')}
                     </span>
                     {availability && (

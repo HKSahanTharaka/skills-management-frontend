@@ -17,7 +17,7 @@ const Card = ({
   return (
     <div
       className={`
-        bg-white rounded-lg border border-gray-200 shadow-sm
+        bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm
         ${isClickable ? 'cursor-pointer hover:shadow-md transition-shadow duration-200' : ''}
         ${className}
       `}
@@ -37,9 +37,9 @@ const Card = ({
       )}
 
       {displayHeader && (
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-700">
           {typeof displayHeader === 'string' ? (
-            <h3 className="text-lg font-semibold text-gray-900">{displayHeader}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">{displayHeader}</h3>
           ) : (
             displayHeader
           )}
@@ -49,7 +49,7 @@ const Card = ({
       <div className={`px-6 py-4 ${bodyClassName}`}>{children}</div>
 
       {footer && (
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-lg">
+        <div className="px-6 py-4 border-t border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 rounded-b-lg">
           {footer}
         </div>
       )}

@@ -76,8 +76,8 @@ const ProjectsPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Projects Management</h1>
-          <p className="mt-2 text-gray-600">Manage your projects and track progress</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Projects Management</h1>
+          <p className="mt-2 text-gray-600 dark:text-slate-400">Manage your projects and track progress</p>
         </div>
         <Button variant="primary" onClick={handleCreate} leftIcon={<Plus className="h-4 w-4" />}>
           New Project
@@ -85,7 +85,7 @@ const ProjectsPage = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="md:col-span-2">
             <Input
@@ -117,9 +117,9 @@ const ProjectsPage = () => {
         {PROJECT_STATUSES.map((status) => {
           const count = data?.data?.filter((p) => p.status === status).length || 0;
           return (
-            <div key={status} className="bg-white rounded-lg border border-gray-200 p-4">
-              <p className="text-sm font-medium text-gray-600">{status}</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{count}</p>
+            <div key={status} className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4">
+              <p className="text-sm font-medium text-gray-600 dark:text-slate-400">{status}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-slate-100 mt-1">{count}</p>
             </div>
           );
         })}
@@ -205,9 +205,9 @@ const ProjectsPage = () => {
           </div>
         }
       >
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-slate-400">
           Are you sure you want to delete{' '}
-          <span className="font-semibold">{showDeleteConfirm?.project_name}</span>? This action
+          <span className="font-semibold text-gray-900 dark:text-slate-100">{showDeleteConfirm?.project_name}</span>? This action
           cannot be undone.
         </p>
       </Modal>

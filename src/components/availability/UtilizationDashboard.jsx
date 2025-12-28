@@ -19,8 +19,8 @@ const UtilizationDashboard = ({ utilizationData }) => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Users className="h-6 w-6 text-blue-600" />
+            <div className="p-3 bg-primary-100 rounded-lg">
+              <Users className="h-6 w-6 text-primary-600" />
             </div>
             <div>
               <p className="text-sm text-gray-600">Total Personnel</p>
@@ -194,7 +194,7 @@ function getUtilizationStatus(percentage) {
   } else if (percentage <= 50) {
     return { color: 'green', label: 'Under-utilized', bgColor: 'bg-green-500' };
   } else if (percentage <= 80) {
-    return { color: 'blue', label: 'Well-balanced', bgColor: 'bg-blue-500' };
+    return { color: 'primary', label: 'Well-balanced', bgColor: 'bg-primary-500' };
   } else if (percentage <= 100) {
     return { color: 'purple', label: 'Fully allocated', bgColor: 'bg-purple-500' };
   } else {

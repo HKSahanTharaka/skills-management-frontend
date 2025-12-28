@@ -89,15 +89,15 @@ const PersonnelPage = () => {
               className="h-10 w-10 rounded-full object-cover"
             />
           ) : (
-            <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
-              <span className="text-primary-600 font-medium text-sm">
+            <div className="h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+              <span className="text-primary-600 dark:text-primary-400 font-medium text-sm">
                 {value.charAt(0).toUpperCase()}
               </span>
             </div>
           )}
           <div>
-            <p className="font-medium text-gray-900">{value}</p>
-            <p className="text-sm text-gray-500">{row.email}</p>
+            <p className="font-medium text-gray-900 dark:text-slate-100">{value}</p>
+            <p className="text-sm text-gray-500 dark:text-slate-400">{row.email}</p>
           </div>
         </div>
       ),
@@ -170,8 +170,8 @@ const PersonnelPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Personnel Management</h1>
-          <p className="mt-2 text-gray-600">Manage your team members and their skills</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Personnel Management</h1>
+          <p className="mt-2 text-gray-600 dark:text-slate-400">Manage your team members and their skills</p>
         </div>
         {permissions.canCreatePersonnel && (
           <Button variant="primary" onClick={handleCreate} leftIcon={<Plus className="h-4 w-4" />}>
@@ -181,7 +181,7 @@ const PersonnelPage = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Input
             placeholder="Search by name or email..."
@@ -204,7 +204,7 @@ const PersonnelPage = () => {
             onChange={(e) => handleFilterChange('experience_level', e.target.value)}
           />
           <div className="flex items-center justify-end">
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-600 dark:text-slate-400">
               {data?.pagination?.total || 0} personnel found
             </span>
           </div>
@@ -287,9 +287,9 @@ const PersonnelPage = () => {
           </div>
         }
       >
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-slate-400">
           Are you sure you want to delete{' '}
-          <span className="font-semibold">{showDeleteConfirm?.name}</span>? This action cannot be
+          <span className="font-semibold text-gray-900 dark:text-slate-100">{showDeleteConfirm?.name}</span>? This action cannot be
           undone.
         </p>
       </Modal>

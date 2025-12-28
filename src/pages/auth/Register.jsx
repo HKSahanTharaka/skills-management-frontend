@@ -26,7 +26,7 @@ const Register = () => {
 
   const getPasswordStrength = () => {
     if (!password) return { strength: 0, label: '', color: '' };
-    
+
     let strength = 0;
     if (password.length >= 8) strength++;
     if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
@@ -65,7 +65,7 @@ const Register = () => {
         {/* Header */}
         <div className="text-center">
           <div className="mx-auto h-16 w-16 bg-gradient-to-br from-primary-600 to-primary-700 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
-            <UserPlus className="h-8 w-8 text-gray-900" />
+            <UserPlus className="h-8 w-8 text-white" />
           </div>
           <h2 className="text-3xl font-bold text-gray-900">Create Account</h2>
           <p className="mt-2 text-sm text-gray-600">
@@ -101,11 +101,10 @@ const Register = () => {
                   {[1, 2, 3, 4].map((level) => (
                     <div
                       key={level}
-                      className={`h-1 flex-1 rounded-full transition-all ${
-                        level <= passwordStrength.strength
+                      className={`h-1 flex-1 rounded-full transition-all ${level <= passwordStrength.strength
                           ? passwordStrength.color
                           : 'bg-gray-200'
-                      }`}
+                        }`}
                     />
                   ))}
                 </div>

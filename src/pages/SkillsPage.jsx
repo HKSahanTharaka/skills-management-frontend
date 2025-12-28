@@ -89,7 +89,7 @@ const SkillsPage = () => {
       key: 'skill_name',
       label: 'Skill Name',
       sortable: true,
-      render: (value) => <span className="font-medium text-gray-900">{value}</span>,
+      render: (value) => <span className="font-medium text-gray-900 dark:text-slate-100">{value}</span>,
     },
     {
       key: 'category',
@@ -105,7 +105,7 @@ const SkillsPage = () => {
       key: 'description',
       label: 'Description',
       render: (value) => (
-        <span className="text-sm text-gray-600 line-clamp-2">
+        <span className="text-sm text-gray-600 dark:text-slate-400 line-clamp-2">
           {value || 'No description'}
         </span>
       ),
@@ -146,8 +146,8 @@ const SkillsPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Skills Management</h1>
-          <p className="mt-2 text-gray-600">Manage skills available in the system</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Skills Management</h1>
+          <p className="mt-2 text-gray-600 dark:text-slate-400">Manage skills available in the system</p>
         </div>
         {permissions.canCreateSkill && (
           <Button variant="primary" onClick={handleCreate} leftIcon={<Plus className="h-4 w-4" />}>
@@ -157,7 +157,7 @@ const SkillsPage = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4">
+      <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-2">
             <Input
@@ -182,7 +182,7 @@ const SkillsPage = () => {
             onChange={(e) => handleCategoryChange(e.target.value)}
           />
           <div className="flex items-center justify-between gap-2">
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-gray-600 dark:text-slate-400">
               {data?.pagination?.total || 0} skills
             </span>
             <div className="flex gap-1">
@@ -225,7 +225,7 @@ const SkillsPage = () => {
                   onClick={permissions.canEditSkill ? () => handleEdit(skill) : undefined}
                   header={
                     <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-gray-900">{skill.skill_name}</h3>
+                      <h3 className="font-semibold text-gray-900 dark:text-slate-100">{skill.skill_name}</h3>
                       <Badge variant={getCategoryColor(skill.category)} size="sm">
                         {skill.category}
                       </Badge>
@@ -263,7 +263,7 @@ const SkillsPage = () => {
                     </div>
                   }
                 >
-                  <p className="text-sm text-gray-600 line-clamp-3">
+                  <p className="text-sm text-gray-600 dark:text-slate-400 line-clamp-3">
                     {skill.description || 'No description available'}
                   </p>
                 </Card>
@@ -336,9 +336,9 @@ const SkillsPage = () => {
           </div>
         }
       >
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-slate-400">
           Are you sure you want to delete the skill{' '}
-          <span className="font-semibold">{showDeleteConfirm?.skill_name}</span>? This action cannot be
+          <span className="font-semibold text-gray-900 dark:text-slate-100">{showDeleteConfirm?.skill_name}</span>? This action cannot be
           undone.
         </p>
       </Modal>

@@ -1,32 +1,50 @@
 import { Link } from 'react-router-dom';
-import { Menu, LogOut, User, Settings, Bell } from 'lucide-react';
-import { useState } from 'react';
-import { useAuthStore } from '../../store/authStore';
+import { Menu, Search } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { useAppStore } from '../../store/appStore';
-import RoleBadge from '../common/RoleBadge';
+import ThemeToggle from '../common/ThemeToggle';
 
 const Header = () => {
-  const { user, logout } = useAuthStore();
   const { sidebarOpen, toggleSidebar } = useAppStore();
-  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  // Sync with sidebar collapse state
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setSidebarCollapsed(true);
+      } else if (currentScrollY < lastScrollY) {
+        setSidebarCollapsed(false);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+    <header className={`bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 sticky top-0 z-40 shadow-lg backdrop-blur-sm transition-all duration-300 ${sidebarCollapsed ? 'ml-20' : 'ml-64'
+      }`}>
       <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
         {/* Left side */}
         <div className="flex items-center gap-4">
           <button
             onClick={toggleSidebar}
-            className="text-gray-500 hover:text-gray-700 transition-colors lg:hidden"
+            className="text-white/80 hover:text-white hover:bg-white/10 p-2 rounded-lg transition-all duration-200 lg:hidden"
           >
             <Menu className="h-6 w-6" />
           </button>
-          
-          <Link to="/dashboard" className="flex items-center">
-            <div className="h-10 w-10 bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-gray-900 font-bold text-lg">SM</span>
+
+          <Link to="/dashboard" className="flex items-center group">
+            <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+              <span className="text-primary-600 font-bold text-lg">SM</span>
             </div>
-            <span className="ml-3 text-xl font-bold text-gray-900 hidden sm:block">
+            <span className="ml-3 text-xl font-bold text-white hidden sm:block group-hover:text-white/90 transition-colors">
               Skills Management
             </span>
           </Link>
@@ -34,65 +52,18 @@ const Header = () => {
 
         {/* Right side */}
         <div className="flex items-center gap-3">
-          {/* Notifications */}
-          <button className="relative p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-            <Bell className="h-5 w-5" />
-            <span className="absolute top-1 right-1 h-2 w-2 bg-danger-600 rounded-full"></span>
-          </button>
-
-          {/* User menu */}
-          <div className="relative">
-            <button
-              onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <div className="h-8 w-8 bg-primary-100 rounded-full flex items-center justify-center">
-                <User className="h-4 w-4 text-primary-600" />
-              </div>
-              <div className="hidden sm:block text-left">
-                <p className="text-sm font-medium text-gray-700">{user?.email}</p>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <RoleBadge role={user?.role} />
-                </div>
-              </div>
-            </button>
-
-            {/* Dropdown menu */}
-            {showUserMenu && (
-              <>
-                <div
-                  className="fixed inset-0 z-10"
-                  onClick={() => setShowUserMenu(false)}
-                />
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-20">
-                  <Link
-                    to="/profile"
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                    onClick={() => setShowUserMenu(false)}
-                  >
-                    <User className="h-4 w-4" />
-                    Profile
-                  </Link>
-                  <Link
-                    to="/settings"
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                    onClick={() => setShowUserMenu(false)}
-                  >
-                    <Settings className="h-4 w-4" />
-                    Settings
-                  </Link>
-                  <hr className="my-1 border-gray-200" />
-                  <button
-                    onClick={logout}
-                    className="w-full flex items-center gap-2 px-4 py-2 text-sm text-danger-600 hover:bg-danger-50 transition-colors"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Logout
-                  </button>
-                </div>
-              </>
-            )}
+          {/* Search - Desktop only */}
+          <div className="hidden md:flex items-center bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20 hover:bg-white/15 transition-all duration-200 group">
+            <Search className="h-4 w-4 text-white/60 group-hover:text-white/80 transition-colors" />
+            <input
+              type="text"
+              placeholder="Search..."
+              className="bg-transparent border-none outline-none text-white placeholder-white/50 text-sm ml-2 w-32 focus:w-48 transition-all duration-300"
+            />
           </div>
+
+          {/* Theme Toggle */}
+          <ThemeToggle />
         </div>
       </div>
     </header>

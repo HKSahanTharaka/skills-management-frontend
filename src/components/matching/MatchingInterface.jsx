@@ -108,8 +108,8 @@ const MatchingInterface = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Project Matching</h1>
-        <p className="mt-2 text-gray-600">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Project Matching</h1>
+        <p className="mt-2 text-gray-600 dark:text-slate-400">
           Find the best personnel matches for your projects based on skills and availability
         </p>
       </div>
@@ -148,13 +148,13 @@ const MatchingInterface = () => {
 
           {/* Project Info */}
           {selectedProjectData && (
-            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="p-4 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h3 className="font-semibold text-gray-900">
+                  <h3 className="font-semibold text-gray-900 dark:text-slate-100">
                     {selectedProjectData.project_name}
                   </h3>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">
                     {selectedProjectData.description}
                   </p>
                 </div>
@@ -164,7 +164,7 @@ const MatchingInterface = () => {
               {selectedProjectData.required_skills &&
                 selectedProjectData.required_skills.length > 0 && (
                   <div>
-                    <p className="text-sm font-medium text-gray-700 mb-2">Required Skills:</p>
+                    <p className="text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Required Skills:</p>
                     <div className="flex flex-wrap gap-2">
                       {selectedProjectData.required_skills.map((skill) => (
                         <Badge key={skill.skill_id} variant="secondary">
@@ -183,7 +183,7 @@ const MatchingInterface = () => {
       {matches && matches.length > 0 && (
         <Card>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-900">
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100">
               Found {filteredMatches?.length || 0} matches
             </h3>
             <Button
@@ -196,7 +196,7 @@ const MatchingInterface = () => {
           </div>
 
           {showFilters && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-gray-200">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-gray-200 dark:border-slate-700">
               <Input
                 label="Search Personnel"
                 placeholder="Search by name..."

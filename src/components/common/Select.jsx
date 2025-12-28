@@ -31,9 +31,9 @@ const Select = forwardRef(
     return (
       <div className={`w-full ${containerClassName}`}>
         {label && (
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
             {label}
-            {required && <span className="text-danger-600 ml-1">*</span>}
+            {required && <span className="text-danger-600 dark:text-danger-400 ml-1">*</span>}
           </label>
         )}
 
@@ -47,24 +47,22 @@ const Select = forwardRef(
               w-full rounded-lg border px-3 py-2 text-sm text-left
               flex items-center justify-between
               transition-all duration-200
-              ${
-                error
-                  ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500'
-                  : 'border-gray-300 hover:border-gray-400'
+              ${error
+                ? 'border-danger-300 dark:border-danger-500 focus:border-danger-500 focus:ring-danger-500'
+                : 'border-gray-300 dark:border-slate-600 hover:border-gray-400 dark:hover:border-slate-500'
               }
-              ${disabled ? 'bg-gray-50 cursor-not-allowed' : 'bg-white cursor-pointer'}
+              ${disabled ? 'bg-gray-50 dark:bg-slate-900 cursor-not-allowed' : 'bg-white dark:bg-slate-800 cursor-pointer'}
               focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-20
               ${className}
             `}
             {...props}
           >
-            <span className={selectedOption ? 'text-gray-900' : 'text-gray-400'}>
+            <span className={selectedOption ? 'text-gray-900 dark:text-slate-100' : 'text-gray-400 dark:text-slate-500'}>
               {selectedOption ? selectedOption.label : placeholder}
             </span>
             <ChevronDown
-              className={`h-4 w-4 text-gray-400 transition-transform ${
-                isOpen ? 'transform rotate-180' : ''
-              }`}
+              className={`h-4 w-4 text-gray-400 dark:text-slate-500 transition-transform ${isOpen ? 'transform rotate-180' : ''
+                }`}
             />
           </button>
 
@@ -72,9 +70,9 @@ const Select = forwardRef(
           {isOpen && !disabled && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
-              <div className="absolute z-20 mt-1 w-full bg-white rounded-lg shadow-lg border border-gray-200 max-h-60 overflow-auto">
+              <div className="absolute z-20 mt-1 w-full bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 max-h-60 overflow-auto">
                 {options.length === 0 ? (
-                  <div className="px-3 py-2 text-sm text-gray-500">No options available</div>
+                  <div className="px-3 py-2 text-sm text-gray-500 dark:text-slate-400">No options available</div>
                 ) : (
                   options.map((option) => (
                     <button
@@ -85,16 +83,15 @@ const Select = forwardRef(
                         w-full text-left px-3 py-2 text-sm
                         flex items-center justify-between
                         transition-colors
-                        ${
-                          option.value === value
-                            ? 'bg-primary-50 text-primary-700'
-                            : 'text-gray-900 hover:bg-gray-50'
+                        ${option.value === value
+                          ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400'
+                          : 'text-gray-900 dark:text-slate-100 hover:bg-gray-50 dark:hover:bg-slate-700'
                         }
                       `}
                     >
                       <span>{option.label}</span>
                       {option.value === value && (
-                        <Check className="h-4 w-4 text-primary-600" />
+                        <Check className="h-4 w-4 text-primary-600 dark:text-primary-400" />
                       )}
                     </button>
                   ))

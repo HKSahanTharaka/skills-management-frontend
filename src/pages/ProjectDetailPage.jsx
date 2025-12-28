@@ -117,8 +117,8 @@ const ProjectDetailPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Award className="h-6 w-6 text-blue-600" />
+            <div className="p-3 bg-primary-100 rounded-lg">
+              <Award className="h-6 w-6 text-primary-600" />
             </div>
             <div>
               <p className="text-sm text-gray-600">Required Skills</p>

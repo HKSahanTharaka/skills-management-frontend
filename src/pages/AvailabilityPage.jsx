@@ -66,15 +66,15 @@ const AvailabilityPage = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Availability & Allocation Management</h1>
-        <p className="mt-2 text-gray-600">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Availability & Allocation Management</h1>
+        <p className="mt-2 text-gray-600 dark:text-slate-400">
           Manage personnel availability and track project allocations
         </p>
       </div>
 
       {/* Tabs */}
       <Card>
-        <div className="border-b border-gray-200">
+        <div className="border-b border-gray-200 dark:border-slate-700">
           <nav className="-mb-px flex space-x-8">
             {tabs.map((tab) => {
               const Icon = tab.icon;
@@ -84,10 +84,9 @@ const AvailabilityPage = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`
                     flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors
-                    ${
-                      activeTab === tab.id
-                        ? 'border-primary-500 text-primary-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ${activeTab === tab.id
+                      ? 'border-primary-500 text-primary-600 dark:text-primary-400'
+                      : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'
                     }
                   `}
                 >
@@ -135,7 +134,7 @@ const AvailabilityPage = () => {
             )
           ) : (
             <Card>
-              <p className="text-center text-gray-500 py-8">
+              <p className="text-center text-gray-500 dark:text-slate-400 py-8">
                 Please select personnel to view their availability calendar
               </p>
             </Card>
@@ -169,14 +168,14 @@ const AvailabilityPage = () => {
               <AllocationChart allocations={allocationsData} />
             ) : (
               <Card>
-                <p className="text-center text-gray-500 py-8">
+                <p className="text-center text-gray-500 dark:text-slate-400 py-8">
                   No allocations found for this project. Allocate personnel to this project to see them here.
                 </p>
               </Card>
             )
           ) : (
             <Card>
-              <p className="text-center text-gray-500 py-8">
+              <p className="text-center text-gray-500 dark:text-slate-400 py-8">
                 Please select a project to view allocations
               </p>
             </Card>
