@@ -24,12 +24,38 @@ const MatchingInterface = () => {
   const projects = projectsData?.data || [];
 
   const {
-    data: matches,
+    data: matchingResponse,
     isLoading: isLoadingMatches,
     refetch: refetchMatches,
   } = useMatchPersonnel(selectedProject, {
     enabled: !!selectedProject,
   });
+
+  // Extract required skills count
+  const totalRequiredSkills = matchingResponse?.requiredSkills?.length || 0;
+
+  // Map backend response to expected format
+  const matches = matchingResponse?.matchedPersonnel?.map(match => ({
+    id: match.personnelId,
+    full_name: match.name,
+    email: match.email || '',
+    role_title: match.roleTitle,
+    experience_level: match.experienceLevel,
+    match_score: match.matchScore,
+    matching_skills: match.matchingSkills?.filter(s => s.meets).map(s => ({
+      skill_name: s.skillName,
+      proficiency_level: s.actual,
+      min_required: s.required,
+    })) || [],
+    missing_skills: match.matchingSkills?.filter(s => !s.meets).map(s => ({
+      skill_name: s.skillName,
+      min_proficiency_level: s.required,
+    })) || [],
+    total_required_skills: totalRequiredSkills,
+    availability_percentage: match.availability,
+    profile_picture_url: match.profileImageUrl,
+    years_of_experience: 0, // This data is not provided by backend
+  })) || [];
 
   const allocateMutation = useAllocateToProject();
 
@@ -49,6 +75,8 @@ const MatchingInterface = () => {
         projectId: selectedProject,
         personnelId: personnel.id,
         allocationPercentage: 100,
+        startDate: selectedProjectData?.start_date,
+        endDate: selectedProjectData?.end_date,
       });
     } catch (error) {
       // Error handled by mutation

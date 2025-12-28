@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { projectSchema } from '../../utils/validation';
 import { PROJECT_STATUSES } from '../../utils/constants';
@@ -11,6 +11,7 @@ const ProjectForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(projectSchema),
@@ -66,15 +67,22 @@ const ProjectForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
         />
       </div>
 
-      <Select
-        label="Status"
-        required
-        options={PROJECT_STATUSES.map((status) => ({
-          value: status,
-          label: status,
-        }))}
-        error={errors.status?.message}
-        {...register('status')}
+      <Controller
+        name="status"
+        control={control}
+        render={({ field }) => (
+          <Select
+            label="Status"
+            required
+            options={PROJECT_STATUSES.map((status) => ({
+              value: status,
+              label: status,
+            }))}
+            error={errors.status?.message}
+            value={field.value}
+            onChange={(e) => field.onChange(e.target.value)}
+          />
+        )}
       />
 
       <div className="flex gap-3 pt-4 border-t border-gray-200">

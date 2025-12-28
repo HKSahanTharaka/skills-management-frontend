@@ -5,6 +5,7 @@ import {
   useCreateAvailability,
   useUpdateAvailability,
   useDeleteAvailability,
+  useProjectAllocations,
 } from '../hooks/useMatching';
 import { usePersonnel } from '../hooks/usePersonnel';
 import { useProjects } from '../hooks/useProjects';
@@ -17,6 +18,7 @@ import AllocationChart from '../components/availability/AllocationChart';
 const AvailabilityPage = () => {
   const [activeTab, setActiveTab] = useState('calendar');
   const [selectedPersonnel, setSelectedPersonnel] = useState('');
+  const [selectedProject, setSelectedProject] = useState('');
   const [dateRange, setDateRange] = useState({
     startDate: new Date().toISOString().split('T')[0],
     endDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
@@ -34,29 +36,10 @@ const AvailabilityPage = () => {
     { enabled: !!selectedPersonnel && activeTab === 'calendar' }
   );
 
-  // Build allocations data from projects
-  const allocationsData = useMemo(() => {
-    const allocations = [];
-    projects.forEach(project => {
-      if (project.allocated_personnel) {
-        project.allocated_personnel.forEach(person => {
-          allocations.push({
-            id: person.id,
-            personnel_id: person.personnel_id,
-            personnel_name: person.personnel_name,
-            project_id: project.id,
-            project_name: project.project_name,
-            allocation_percentage: person.allocation_percentage || 100,
-            start_date: person.start_date || project.start_date,
-            end_date: person.end_date || project.end_date,
-          });
-        });
-      }
-    });
-    return allocations;
-  }, [projects]);
-
-  const isLoadingAllocations = false;
+  // Fetch allocations for selected project
+  const { data: allocationsData, isLoading: isLoadingAllocations } = useProjectAllocations(
+    selectedProject
+  );
 
   const createMutation = useCreateAvailability();
   const updateMutation = useUpdateAvailability();
@@ -129,7 +112,7 @@ const AvailabilityPage = () => {
                 { value: '', label: 'Select personnel...' },
                 ...personnel.map((p) => ({
                   value: p.id,
-                  label: `${p.full_name} (${p.email})`,
+                  label: `${p.name} (${p.email})`,
                 })),
               ]}
               value={selectedPersonnel}
@@ -161,15 +144,40 @@ const AvailabilityPage = () => {
       )}
 
       {activeTab === 'allocations' && (
-        <div>
-          {isLoadingAllocations ? (
-            <Loading />
-          ) : allocationsData.length > 0 ? (
-            <AllocationChart allocations={allocationsData} />
+        <div className="space-y-6">
+          {/* Project Selector */}
+          <Card>
+            <Select
+              label="Select Project"
+              placeholder="Choose a project to view allocations"
+              options={[
+                { value: '', label: 'Select project...' },
+                ...projects.map((p) => ({
+                  value: p.id,
+                  label: `${p.project_name} (${p.status})`,
+                })),
+              ]}
+              value={selectedProject}
+              onChange={(e) => setSelectedProject(e.target.value)}
+            />
+          </Card>
+
+          {selectedProject ? (
+            isLoadingAllocations ? (
+              <Loading />
+            ) : allocationsData && allocationsData.length > 0 ? (
+              <AllocationChart allocations={allocationsData} />
+            ) : (
+              <Card>
+                <p className="text-center text-gray-500 py-8">
+                  No allocations found for this project. Allocate personnel to this project to see them here.
+                </p>
+              </Card>
+            )
           ) : (
             <Card>
               <p className="text-center text-gray-500 py-8">
-                No allocations found. Allocate personnel to projects to see them here.
+                Please select a project to view allocations
               </p>
             </Card>
           )}

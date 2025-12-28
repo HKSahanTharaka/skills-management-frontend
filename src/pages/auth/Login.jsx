@@ -44,7 +44,7 @@ export const Login = () => {
         {/* Header */}
         <div className="text-center">
           <div className="mx-auto h-16 w-16 bg-gradient-to-br from-primary-600 to-primary-700 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
-            <LogIn className="h-8 w-8 text-white" />
+            <LogIn className="h-8 w-8 text-gray-900" />
           </div>
           <h2 className="text-3xl font-bold text-gray-900">Welcome Back</h2>
           <p className="mt-2 text-sm text-gray-600">

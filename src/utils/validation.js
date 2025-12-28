@@ -21,7 +21,7 @@ export const personnelSchema = z.object({
   role_title: z.string().min(1, 'Role title is required'),
   experience_level: z.enum(['Junior', 'Mid-Level', 'Senior']),
   bio: z.string().optional(),
-  profile_image_url: z.string().url().optional().or(z.literal('')),
+  profile_image_url: z.union([z.string().url(), z.literal('')]).optional(),
 });
 
 export const skillSchema = z.object({

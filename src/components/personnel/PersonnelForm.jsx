@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -18,6 +18,7 @@ const PersonnelForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
     register,
     handleSubmit,
     setValue,
+    control,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(personnelSchema),
@@ -63,7 +64,13 @@ const PersonnelForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
   };
 
   const onFormSubmit = (data) => {
-    onSubmit({ ...data, profile_image_url: imageUrl });
+    // Clean the data: remove empty strings and send proper values
+    const cleanedData = {
+      ...data,
+      profile_image_url: imageUrl || undefined,
+      bio: data.bio || undefined,
+    };
+    onSubmit(cleanedData);
   };
 
   return (
@@ -133,15 +140,22 @@ const PersonnelForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
           {...register('role_title')}
         />
 
-        <Select
-          label="Experience Level"
-          required
-          options={EXPERIENCE_LEVELS.map((level) => ({
-            value: level,
-            label: level,
-          }))}
-          error={errors.experience_level?.message}
-          {...register('experience_level')}
+        <Controller
+          name="experience_level"
+          control={control}
+          render={({ field }) => (
+            <Select
+              label="Experience Level"
+              required
+              options={EXPERIENCE_LEVELS.map((level) => ({
+                value: level,
+                label: level,
+              }))}
+              error={errors.experience_level?.message}
+              value={field.value}
+              onChange={(e) => field.onChange(e.target.value)}
+            />
+          )}
         />
       </div>
 

@@ -25,7 +25,8 @@ const ProjectDetailPage = () => {
   const [showEdit, setShowEdit] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const { data: project, isLoading } = useProject(id);
+  const { data: response, isLoading } = useProject(id);
+  const project = response?.data;
   const updateMutation = useUpdateProject();
   const deleteMutation = useDeleteProject();
 

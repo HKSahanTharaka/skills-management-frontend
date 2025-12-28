@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { skillSchema } from '../../utils/validation';
 import { SKILL_CATEGORIES } from '../../utils/constants';
@@ -10,6 +10,7 @@ const SkillForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(skillSchema),
@@ -30,15 +31,22 @@ const SkillForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
         {...register('skill_name')}
       />
 
-      <Select
-        label="Category"
-        required
-        options={SKILL_CATEGORIES.map((category) => ({
-          value: category,
-          label: category,
-        }))}
-        error={errors.category?.message}
-        {...register('category')}
+      <Controller
+        name="category"
+        control={control}
+        render={({ field }) => (
+          <Select
+            label="Category"
+            required
+            options={SKILL_CATEGORIES.map((category) => ({
+              value: category,
+              label: category,
+            }))}
+            error={errors.category?.message}
+            value={field.value}
+            onChange={(e) => field.onChange(e.target.value)}
+          />
+        )}
       />
 
       <div>

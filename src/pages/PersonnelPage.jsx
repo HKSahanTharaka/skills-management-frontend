@@ -226,7 +226,6 @@ const PersonnelPage = () => {
             columns={columns}
             data={data?.data || []}
             isLoading={isLoading}
-            onRowClick={(row) => navigate(`/personnel/${row.id}`)}
           />
 
           {data?.pagination && (

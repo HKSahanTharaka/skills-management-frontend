@@ -24,9 +24,9 @@ const Header = () => {
           
           <Link to="/dashboard" className="flex items-center">
             <div className="h-10 w-10 bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-lg">SM</span>
+              <span className="text-gray-900 font-bold text-lg">SM</span>
             </div>
-            <span className="ml-3 text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent hidden sm:block">
+            <span className="ml-3 text-xl font-bold text-gray-900 hidden sm:block">
               Skills Management
             </span>
           </Link>

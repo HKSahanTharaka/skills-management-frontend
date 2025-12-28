@@ -131,7 +131,7 @@ const AllocationChart = ({ allocations }) => {
                               })}
                               {isOverAllocated && (
                                 <Badge variant="red" size="sm" className="w-full">
-                                  {total}% ⚠️
+                                  {total}% 
                                 </Badge>
                               )}
                             </div>

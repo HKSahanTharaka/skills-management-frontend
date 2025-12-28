@@ -8,7 +8,7 @@ export const useMatchPersonnel = (projectId, options = {}) => {
     queryKey: [QUERY_KEYS.MATCHING, projectId],
     queryFn: async () => {
       const result = await matchingService.findMatchingPersonnel(projectId);
-      return result.suggestions || [];
+      return result; // Return the full response including requiredSkills
     },
     enabled: options.enabled !== undefined ? options.enabled : !!projectId,
   });
@@ -122,7 +122,9 @@ export const useAllocateToProject = () => {
 
   return useMutation({
     mutationFn: ({ projectId, personnelId, allocationPercentage, startDate, endDate, roleInProject }) => {
-      const project = queryClient.getQueryData([QUERY_KEYS.PROJECT_DETAIL, projectId]);
+      // Try to get project data from cache
+      const projectResponse = queryClient.getQueryData([QUERY_KEYS.PROJECT_DETAIL, projectId]);
+      const project = projectResponse?.data;
       
       return allocationService.create({
         project_id: projectId,
@@ -136,6 +138,7 @@ export const useAllocateToProject = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ALLOCATIONS] });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PROJECTS] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MATCHING] });
       toast.success('Personnel allocated to project successfully');
     },
     onError: (error) => {

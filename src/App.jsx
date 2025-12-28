@@ -9,6 +9,7 @@ import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Dashboard from './pages/Dashboard';
 import PersonnelPage from './pages/PersonnelPage';
+import PersonnelDetailPage from './pages/PersonnelDetailPage';
 import SkillsPage from './pages/SkillsPage';
 import ProjectsPage from './pages/ProjectsPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
@@ -67,6 +68,17 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <PersonnelPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/personnel/:id"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <PersonnelDetailPage />
                 </Layout>
               </ProtectedRoute>
             }

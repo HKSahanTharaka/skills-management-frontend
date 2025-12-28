@@ -3,13 +3,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-hot-toast';
-import { UserPlus, Mail, Lock, User } from 'lucide-react';
+import { UserPlus, Mail, Lock } from 'lucide-react';
 import { registerSchema } from '../../utils/validation';
 import { authService } from '../../services/auth.service';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
-import Select from '../../components/common/Select';
-import { USER_ROLES } from '../../utils/constants';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -22,9 +20,6 @@ const Register = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(registerSchema),
-    defaultValues: {
-      role: 'user',
-    },
   });
 
   const password = watch('password');
@@ -39,7 +34,7 @@ const Register = () => {
     if (/[^a-zA-Z\d]/.test(password)) strength++;
 
     const labels = ['Weak', 'Fair', 'Good', 'Strong'];
-    const colors = ['bg-danger-500', 'bg-warning-500', 'bg-primary-500', 'bg-success-500'];
+    const colors = ['bg-red-500', 'bg-yellow-500', 'bg-blue-500', 'bg-green-500'];
 
     return {
       strength,
@@ -70,7 +65,7 @@ const Register = () => {
         {/* Header */}
         <div className="text-center">
           <div className="mx-auto h-16 w-16 bg-gradient-to-br from-primary-600 to-primary-700 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
-            <UserPlus className="h-8 w-8 text-white" />
+            <UserPlus className="h-8 w-8 text-gray-900" />
           </div>
           <h2 className="text-3xl font-bold text-gray-900">Create Account</h2>
           <p className="mt-2 text-sm text-gray-600">
@@ -129,16 +124,6 @@ const Register = () => {
               leftIcon={<Lock className="h-4 w-4" />}
               error={errors.confirmPassword?.message}
               {...register('confirmPassword')}
-            />
-
-            <Select
-              label="Role"
-              options={USER_ROLES.map((role) => ({
-                value: role,
-                label: role.charAt(0).toUpperCase() + role.slice(1),
-              }))}
-              error={errors.role?.message}
-              {...register('role')}
             />
 
             <div className="flex items-start">

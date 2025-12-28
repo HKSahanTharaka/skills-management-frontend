@@ -92,25 +92,25 @@ src/
 ## Features
 
 ### Implemented
-- ✅ Authentication (Login/Register)
-- ✅ Protected routes
-- ✅ API service with interceptors
-- ✅ Global state management
-- ✅ Form validation
-- ✅ Toast notifications
-- ✅ Responsive layout
-- ✅ TailwindCSS styling
+- Authentication (Login/Register)
+- Protected routes
+- API service with interceptors
+- Global state management
+- Form validation
+- Toast notifications
+- Responsive layout
+- TailwindCSS styling
 
 ### Coming Soon
-- 🔨 Personnel management
-- 🔨 Skills management
-- 🔨 Projects management
-- 🔨 Personnel matching algorithm
-- 🔨 Availability tracking
-- 🔨 Resource allocation
-- 🔨 Data visualization
-- 🔨 Search and filtering
-- 🔨 Image upload (Cloudinary)
+- Personnel management
+- Skills management
+- Projects management
+- Personnel matching algorithm
+- Availability tracking
+- Resource allocation
+- Data visualization
+- Search and filtering
+- Image upload (Cloudinary)
 
 ## Scripts
 

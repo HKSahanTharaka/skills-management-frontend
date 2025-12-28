@@ -1,4 +1,4 @@
-import { CheckCircle, XCircle, Calendar, Award, TrendingUp } from 'lucide-react';
+import { CheckCircle, XCircle, Calendar, Award } from 'lucide-react';
 import Card from '../common/Card';
 import Badge from '../common/Badge';
 import Button from '../common/Button';
@@ -60,7 +60,7 @@ const MatchResultCard = ({ match, onAllocate, isAllocating }) => {
           </div>
 
           {/* Match Details */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             {/* Skills Match */}
             <div className="flex items-center gap-2">
               <Award className="h-4 w-4 text-gray-400" />
@@ -68,17 +68,6 @@ const MatchResultCard = ({ match, onAllocate, isAllocating }) => {
                 <p className="text-xs text-gray-500">Skills Match</p>
                 <p className="text-sm font-medium text-gray-900">
                   {match.matching_skills?.length || 0} / {match.total_required_skills || 0}
-                </p>
-              </div>
-            </div>
-
-            {/* Experience */}
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-gray-400" />
-              <div>
-                <p className="text-xs text-gray-500">Experience</p>
-                <p className="text-sm font-medium text-gray-900">
-                  {match.years_of_experience || 0} years
                 </p>
               </div>
             </div>
