@@ -129,7 +129,7 @@ export const Dashboard = () => {
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600 dark:text-slate-400">Active Projects</span>
-              <span className="font-semibold text-green-600 dark:text-green-400">{activeProjects}</span>
+              <span className="font-semibold text-gray-900 dark:text-slate-100">{activeProjects}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600 dark:text-slate-400">Completed Projects</span>

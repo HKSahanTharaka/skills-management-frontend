@@ -62,7 +62,7 @@ const AllocationChart = ({ allocations }) => {
     <Card>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900">Project Allocations Timeline</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">Project Allocations Timeline</h3>
           <Badge variant="secondary">{personnel.length} Personnel</Badge>
         </div>
 
@@ -70,12 +70,12 @@ const AllocationChart = ({ allocations }) => {
         <div className="overflow-x-auto">
           <div className="min-w-full">
             {/* Header */}
-            <div className="flex border-b border-gray-200">
-              <div className="w-48 flex-shrink-0 p-3 font-medium text-gray-700">Personnel</div>
+            <div className="flex border-b border-gray-200 dark:border-slate-700">
+              <div className="w-48 flex-shrink-0 p-3 font-medium text-gray-700 dark:text-slate-300">Personnel</div>
               {months.map((month) => (
                 <div
                   key={month.toISOString()}
-                  className="flex-1 min-w-32 p-3 text-center font-medium text-gray-700 border-l border-gray-200"
+                  className="flex-1 min-w-32 p-3 text-center font-medium text-gray-700 dark:text-slate-300 border-l border-gray-200 dark:border-slate-700"
                 >
                   {format(month, 'MMM yyyy')}
                 </div>
@@ -86,9 +86,9 @@ const AllocationChart = ({ allocations }) => {
             {personnel.length > 0 ? (
               personnel.map((person) => {
                 return (
-                  <div key={person.id} className="flex border-b border-gray-200 hover:bg-gray-50">
+                  <div key={person.id} className="flex border-b border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800">
                     <div className="w-48 flex-shrink-0 p-3">
-                      <p className="font-medium text-gray-900 text-sm">{person.name}</p>
+                      <p className="font-medium text-gray-900 dark:text-slate-100 text-sm">{person.name}</p>
                     </div>
                     {months.map((month) => {
                       const { total, projects } = calculateMonthAllocation(
@@ -100,7 +100,7 @@ const AllocationChart = ({ allocations }) => {
                       return (
                         <div
                           key={month.toISOString()}
-                          className={`flex-1 min-w-32 p-3 border-l border-gray-200 ${isOverAllocated ? 'bg-red-50' : ''
+                          className={`flex-1 min-w-32 p-3 border-l border-gray-200 dark:border-slate-700 ${isOverAllocated ? 'bg-red-50 dark:bg-red-900/30' : ''
                             }`}
                         >
                           {projects.length > 0 ? (
@@ -135,7 +135,7 @@ const AllocationChart = ({ allocations }) => {
                               )}
                             </div>
                           ) : (
-                            <div className="text-center text-gray-400 text-xs">-</div>
+                            <div className="text-center text-gray-400 dark:text-slate-500 text-xs">-</div>
                           )}
                         </div>
                       );
@@ -144,26 +144,26 @@ const AllocationChart = ({ allocations }) => {
                 );
               })
             ) : (
-              <div className="p-8 text-center text-gray-500">No allocations found</div>
+              <div className="p-8 text-center text-gray-500 dark:text-slate-400">No allocations found</div>
             )}
           </div>
         </div>
 
         {/* Legend */}
-        <div className="border-t border-gray-200 pt-4">
-          <p className="text-sm font-medium text-gray-700 mb-2">Project Legend:</p>
+        <div className="border-t border-gray-200 dark:border-slate-700 pt-4">
+          <p className="text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Project Legend:</p>
           <div className="flex flex-wrap gap-2">
             {Array.from(projectColors.entries()).map(([projectId, color]) => {
               const project = allocations?.find((a) => a.project_id === projectId);
               return (
                 <div key={projectId} className="flex items-center gap-2">
                   <div className={`w-4 h-4 rounded ${color}`} />
-                  <span className="text-sm text-gray-700">{project?.project_name || 'Unknown'}</span>
+                  <span className="text-sm text-gray-700 dark:text-slate-300">{project?.project_name || 'Unknown'}</span>
                 </div>
               );
             })}
           </div>
-          <div className="mt-3 text-sm text-gray-600">
+          <div className="mt-3 text-sm text-gray-600 dark:text-slate-400">
             <span className="font-medium">Note:</span> Red background indicates over-allocation (&gt;100%)
           </div>
         </div>

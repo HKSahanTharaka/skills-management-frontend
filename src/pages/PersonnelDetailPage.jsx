@@ -52,8 +52,8 @@ const PersonnelDetailPage = () => {
   if (!personnel) {
     return (
       <div className="text-center py-12">
-        <h2 className="text-2xl font-semibold text-gray-900">Personnel not found</h2>
-        <p className="mt-2 text-gray-600">The personnel you're looking for doesn't exist.</p>
+        <h2 className="text-2xl font-semibold text-gray-900 dark:text-slate-100">Personnel not found</h2>
+        <p className="mt-2 text-gray-600 dark:text-slate-400">The personnel you're looking for doesn't exist.</p>
         <Button className="mt-4" onClick={() => navigate('/personnel')}>
           Back to Personnel
         </Button>
@@ -75,8 +75,8 @@ const PersonnelDetailPage = () => {
             Back
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">{personnel.name}</h1>
-            <p className="mt-1 text-gray-600">{personnel.role_title}</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">{personnel.name}</h1>
+            <p className="mt-1 text-gray-600 dark:text-slate-400">{personnel.role_title}</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -114,8 +114,8 @@ const PersonnelDetailPage = () => {
                 className="h-32 w-32 rounded-full object-cover border-4 border-gray-100"
               />
             ) : (
-              <div className="h-32 w-32 rounded-full bg-primary-100 flex items-center justify-center border-4 border-gray-50">
-                <span className="text-primary-600 font-bold text-4xl">
+              <div className="h-32 w-32 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center border-4 border-gray-50 dark:border-slate-700">
+                <span className="text-primary-600 dark:text-primary-400 font-bold text-4xl">
                   {personnel.name.charAt(0).toUpperCase()}
                 </span>
               </div>
@@ -126,21 +126,21 @@ const PersonnelDetailPage = () => {
           <div className="flex-1 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-primary-50 rounded-lg">
-                  <Mail className="h-5 w-5 text-primary-600" />
+                <div className="p-2 bg-primary-50 dark:bg-primary-900/30 rounded-lg">
+                  <Mail className="h-5 w-5 text-primary-600 dark:text-primary-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Email</p>
-                  <p className="font-medium text-gray-900">{personnel.email}</p>
+                  <p className="text-sm text-gray-500 dark:text-slate-400">Email</p>
+                  <p className="font-medium text-gray-900 dark:text-slate-100">{personnel.email}</p>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-50 rounded-lg">
-                  <Briefcase className="h-5 w-5 text-purple-600" />
+                <div className="p-2 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+                  <Briefcase className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Experience Level</p>
+                  <p className="text-sm text-gray-500 dark:text-slate-400">Experience Level</p>
                   <Badge variant={getExperienceLevelColor(personnel.experience_level).replace('badge-', '')}>
                     {personnel.experience_level}
                   </Badge>
@@ -148,12 +148,12 @@ const PersonnelDetailPage = () => {
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-primary-50 rounded-lg">
-                  <Calendar className="h-5 w-5 text-primary-600" />
+                <div className="p-2 bg-primary-50 dark:bg-primary-900/30 rounded-lg">
+                  <Calendar className="h-5 w-5 text-primary-600 dark:text-primary-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Joined</p>
-                  <p className="font-medium text-gray-900">
+                  <p className="text-sm text-gray-500 dark:text-slate-400">Joined</p>
+                  <p className="font-medium text-gray-900 dark:text-slate-100">
                     {formatDisplayDate(personnel.created_at)}
                   </p>
                 </div>
@@ -162,8 +162,8 @@ const PersonnelDetailPage = () => {
 
             {personnel.bio && (
               <div>
-                <h3 className="text-sm font-medium text-gray-700 mb-2">Bio</h3>
-                <p className="text-gray-600">{personnel.bio}</p>
+                <h3 className="text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Bio</h3>
+                <p className="text-gray-600 dark:text-slate-400">{personnel.bio}</p>
               </div>
             )}
           </div>
@@ -173,7 +173,7 @@ const PersonnelDetailPage = () => {
       {/* Skills Section */}
       <Card>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-900">Skills</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">Skills</h2>
           {permissions.canManagePersonnelSkills && (
             <Button
               size="sm"
@@ -184,15 +184,15 @@ const PersonnelDetailPage = () => {
             </Button>
           )}
         </div>
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-gray-500 dark:text-slate-400">
           <p>Skills management feature coming soon...</p>
         </div>
       </Card>
 
       {/* Projects Section */}
       <Card>
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Projects</h2>
-        <div className="text-center py-8 text-gray-500">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100 mb-4">Projects</h2>
+        <div className="text-center py-8 text-gray-500 dark:text-slate-400">
           <p>Project allocations will be shown here...</p>
         </div>
       </Card>
@@ -218,7 +218,7 @@ const PersonnelDetailPage = () => {
         title="Delete Personnel"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-slate-400">
             Are you sure you want to delete <strong>{personnel.name}</strong>? This action cannot
             be undone.
           </p>
