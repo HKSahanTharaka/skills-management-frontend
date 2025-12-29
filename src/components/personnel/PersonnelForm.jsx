@@ -14,7 +14,13 @@ import Select from '../common/Select';
 const PersonnelForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
   const [imageUrl, setImageUrl] = useState(initialData?.profile_image_url || '');
   const [isUploading, setIsUploading] = useState(false);
-  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState(
+    initialData?.skills?.map(skill => ({
+      skill_id: skill.skill_id,
+      proficiency_level: skill.proficiency_level,
+      years_of_experience: skill.years_of_experience || 0,
+    })) || []
+  );
   
   const { data: skillsData } = useSkills({ limit: 1000 });
 
@@ -82,13 +88,18 @@ const PersonnelForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
   };
 
   const onFormSubmit = (data) => {
+    const validSkills = selectedSkills.filter(skill => skill.skill_id && skill.proficiency_level);
+    
+    if (validSkills.length === 0) {
+      toast.error('At least one skill is required');
+      return;
+    }
+    
     const cleanedData = {
       ...data,
       profile_image_url: imageUrl || undefined,
       bio: data.bio || undefined,
     };
-    
-    const validSkills = selectedSkills.filter(skill => skill.skill_id && skill.proficiency_level);
     
     onSubmit(cleanedData, validSkills);
   };
@@ -194,22 +205,21 @@ const PersonnelForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
         )}
       </div>
 
-      {!initialData && (
-        <div className="border-t border-gray-200 pt-4">
-          <div className="flex items-center justify-between mb-3">
-            <label className="block text-sm font-medium text-gray-700">
-              Skills (Optional)
-            </label>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleAddSkill}
-            >
-              <Plus className="h-4 w-4 mr-1" />
-              Add Skill
-            </Button>
-          </div>
+      <div className="border-t border-gray-200 pt-4">
+        <div className="flex items-center justify-between mb-3">
+          <label className="block text-sm font-medium text-gray-700">
+            Skills <span className="text-danger-600">*</span>
+          </label>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleAddSkill}
+          >
+            <Plus className="h-4 w-4 mr-1" />
+            Add Skill
+          </Button>
+        </div>
 
           {selectedSkills.length > 0 && (
             <div className="space-y-3">
@@ -264,13 +274,12 @@ const PersonnelForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
             </div>
           )}
 
-          {selectedSkills.length === 0 && (
-            <p className="text-sm text-gray-500 dark:text-slate-400 italic">
-              No skills added yet. You can add skills now or later.
-            </p>
-          )}
-        </div>
-      )}
+        {selectedSkills.length === 0 && (
+          <p className="text-sm text-gray-500 dark:text-slate-400 italic">
+            No skills added yet. Click "Add Skill" to add at least one skill.
+          </p>
+        )}
+      </div>
 
       <div className="flex gap-3 pt-4 border-t border-gray-200">
         <Button

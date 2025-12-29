@@ -7,8 +7,6 @@ const RoleBadge = ({ role }) => {
         return 'red';
       case 'manager':
         return 'blue';
-      case 'user':
-        return 'green';
       default:
         return 'gray';
     }

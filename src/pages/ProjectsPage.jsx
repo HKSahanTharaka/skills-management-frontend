@@ -45,9 +45,15 @@ const ProjectsPage = () => {
     setShowForm(true);
   };
 
-  const handleEdit = (project) => {
-    setEditingProject(project);
-    setShowForm(true);
+  const handleEdit = async (project) => {
+    try {
+      // Fetch full project details including required skills
+      const fullProject = await projectService.getById(project.id);
+      setEditingProject(fullProject.data);
+      setShowForm(true);
+    } catch (error) {
+      toast.error('Failed to load project details');
+    }
   };
 
   const handleDelete = async () => {
@@ -59,26 +65,22 @@ const ProjectsPage = () => {
   const handleFormSubmit = async (formData, requiredSkills = []) => {
     try {
       if (editingProject) {
+        // When updating, include required_skills in the payload
         await updateMutation.mutateAsync({
           id: editingProject.id,
-          data: formData,
+          data: {
+            ...formData,
+            required_skills: requiredSkills,
+          },
         });
+        toast.success(`Project updated successfully with ${requiredSkills.length} required skill(s)!`);
       } else {
-        const result = await createMutation.mutateAsync(formData);
-        
-        if (requiredSkills.length > 0 && result?.data?.id) {
-          for (const skill of requiredSkills) {
-            try {
-              await projectService.addRequiredSkill(result.data.id, {
-                skill_id: skill.skill_id,
-                minimum_proficiency: skill.minimum_proficiency,
-              });
-            } catch (skillError) {
-              console.error('Error adding required skill:', skillError);
-            }
-          }
-          toast.success(`Project created with ${requiredSkills.length} required skill(s)!`);
-        }
+        // When creating, include required_skills in the initial payload
+        await createMutation.mutateAsync({
+          ...formData,
+          required_skills: requiredSkills,
+        });
+        toast.success(`Project created successfully with ${requiredSkills.length} required skill(s)!`);
       }
       setShowForm(false);
       setEditingProject(null);

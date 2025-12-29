@@ -49,9 +49,15 @@ const PersonnelPage = () => {
     setShowForm(true);
   };
 
-  const handleEdit = (personnel) => {
-    setEditingPersonnel(personnel);
-    setShowForm(true);
+  const handleEdit = async (personnel) => {
+    try {
+      // Fetch full personnel details including skills
+      const fullPersonnel = await personnelService.getById(personnel.id);
+      setEditingPersonnel(fullPersonnel.data);
+      setShowForm(true);
+    } catch (error) {
+      toast.error('Failed to load personnel details');
+    }
   };
 
   const handleDelete = async () => {
@@ -63,27 +69,22 @@ const PersonnelPage = () => {
   const handleFormSubmit = async (formData, skills = []) => {
     try {
       if (editingPersonnel) {
+        // When updating, include skills in the payload
         await updateMutation.mutateAsync({
           id: editingPersonnel.id,
-          data: formData,
+          data: {
+            ...formData,
+            skills: skills,
+          },
         });
+        toast.success(`Personnel updated successfully with ${skills.length} skill(s)!`);
       } else {
-        const result = await createMutation.mutateAsync(formData);
-        
-        if (skills.length > 0 && result?.data?.id) {
-          for (const skill of skills) {
-            try {
-              await personnelService.assignSkill(result.data.id, {
-                skill_id: skill.skill_id,
-                proficiency_level: skill.proficiency_level,
-                years_of_experience: skill.years_of_experience,
-              });
-            } catch (skillError) {
-              console.error('Error assigning skill:', skillError);
-            }
-          }
-          toast.success(`Personnel created with ${skills.length} skill(s) assigned!`);
-        }
+        // When creating, include skills in the initial payload
+        await createMutation.mutateAsync({
+          ...formData,
+          skills: skills,
+        });
+        toast.success(`Personnel created successfully with ${skills.length} skill(s)!`);
       }
       setShowForm(false);
       setEditingPersonnel(null);

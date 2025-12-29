@@ -114,26 +114,30 @@ const SkillsPage = () => {
       sortable: false,
       render: (_, row) => (
         <div className="flex items-center justify-end gap-2">
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleEdit(row);
-            }}
-          >
-            <Edit className="h-4 w-4" />
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowDeleteConfirm(row);
-            }}
-          >
-            <Trash2 className="h-4 w-4 text-danger-600" />
-          </Button>
+          {permissions.canEditSkill && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleEdit(row);
+              }}
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
+          )}
+          {permissions.canDeleteSkill && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowDeleteConfirm(row);
+              }}
+            >
+              <Trash2 className="h-4 w-4 text-danger-600" />
+            </Button>
+          )}
         </div>
       ),
     },

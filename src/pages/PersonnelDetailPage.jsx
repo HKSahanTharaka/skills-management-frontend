@@ -43,11 +43,14 @@ const PersonnelDetailPage = () => {
     navigate('/personnel');
   };
 
-  const handleUpdate = async (formData) => {
+  const handleUpdate = async (formData, skills = []) => {
     try {
       await updateMutation.mutateAsync({
         id: personnel.id,
-        data: formData,
+        data: {
+          ...formData,
+          skills: skills,
+        },
       });
       setShowEditModal(false);
     } catch (error) {

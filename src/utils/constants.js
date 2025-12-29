@@ -16,7 +16,7 @@ export const SKILL_CATEGORIES = [
 
 export const PROJECT_STATUSES = ['Planning', 'Active', 'Completed', 'On Hold'];
 
-export const USER_ROLES = ['admin', 'manager', 'user'];
+export const USER_ROLES = ['admin', 'manager'];
 
 export const AUTH_TOKEN_KEY = 'authToken';
 

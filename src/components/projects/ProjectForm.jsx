@@ -2,6 +2,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 import { projectSchema } from '../../utils/validation';
 import { PROJECT_STATUSES, PROFICIENCY_LEVELS } from '../../utils/constants';
 import { formatDate } from '../../utils/helpers';
@@ -11,7 +12,12 @@ import Input from '../common/Input';
 import Select from '../common/Select';
 
 const ProjectForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
-  const [requiredSkills, setRequiredSkills] = useState([]);
+  const [requiredSkills, setRequiredSkills] = useState(
+    initialData?.required_skills?.map(skill => ({
+      skill_id: skill.skill_id,
+      minimum_proficiency: skill.minimum_proficiency
+    })) || []
+  );
   
   const { data: skillsData } = useSkills({ limit: 1000 });
 
@@ -47,6 +53,12 @@ const ProjectForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
 
   const onFormSubmit = (data) => {
     const validSkills = requiredSkills.filter(skill => skill.skill_id && skill.minimum_proficiency);
+    
+    if (validSkills.length === 0) {
+      toast.error('At least one required skill must be added');
+      return;
+    }
+    
     onSubmit(data, validSkills);
   };
 
@@ -111,12 +123,11 @@ const ProjectForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
         )}
       />
 
-      {!initialData && (
-        <div className="border-t border-gray-200 dark:border-slate-700 pt-4">
-          <div className="flex items-center justify-between mb-3">
-            <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
-              Required Skills (Optional)
-            </label>
+      <div className="border-t border-gray-200 dark:border-slate-700 pt-4">
+        <div className="flex items-center justify-between mb-3">
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300">
+            Required Skills <span className="text-danger-600">*</span>
+          </label>
             <Button
               type="button"
               variant="outline"
@@ -172,13 +183,12 @@ const ProjectForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
             </div>
           )}
 
-          {requiredSkills.length === 0 && (
-            <p className="text-sm text-gray-500 dark:text-slate-400 italic">
-              No required skills added yet. You can add skills now or later.
-            </p>
-          )}
-        </div>
-      )}
+        {requiredSkills.length === 0 && (
+          <p className="text-sm text-gray-500 dark:text-slate-400 italic">
+            No required skills added yet. Click "Add Skill" to add at least one skill.
+          </p>
+        )}
+      </div>
 
       <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-slate-700">
         <Button

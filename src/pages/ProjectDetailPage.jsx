@@ -30,9 +30,15 @@ const ProjectDetailPage = () => {
   const updateMutation = useUpdateProject();
   const deleteMutation = useDeleteProject();
 
-  const handleUpdate = async (formData) => {
+  const handleUpdate = async (formData, requiredSkills = []) => {
     try {
-      await updateMutation.mutateAsync({ id, data: formData });
+      await updateMutation.mutateAsync({ 
+        id, 
+        data: {
+          ...formData,
+          required_skills: requiredSkills,
+        }
+      });
       setShowEdit(false);
     } catch (error) {
       // Error handled by mutation
