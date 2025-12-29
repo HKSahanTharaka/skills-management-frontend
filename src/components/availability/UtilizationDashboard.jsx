@@ -15,7 +15,6 @@ const UtilizationDashboard = ({ utilizationData }) => {
 
   return (
     <div className="space-y-6">
-      {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <div className="flex items-center gap-3">
@@ -66,7 +65,6 @@ const UtilizationDashboard = ({ utilizationData }) => {
         </Card>
       </div>
 
-      {/* Utilization Chart */}
       <Card title="Personnel Utilization">
         <div className="space-y-3">
           {utilizationData.map((person) => {
@@ -103,7 +101,6 @@ const UtilizationDashboard = ({ utilizationData }) => {
                   </div>
                 </div>
 
-                {/* Progress Bar */}
                 <div className="relative h-3 bg-gray-200 rounded-full overflow-hidden">
                   <div
                     className={`absolute top-0 left-0 h-full transition-all ${status.bgColor}`}
@@ -117,7 +114,6 @@ const UtilizationDashboard = ({ utilizationData }) => {
                   )}
                 </div>
 
-                {/* Project Breakdown */}
                 {person.projects && person.projects.length > 0 && (
                   <div className="pl-13">
                     <details className="text-sm">
@@ -144,7 +140,6 @@ const UtilizationDashboard = ({ utilizationData }) => {
         </div>
       </Card>
 
-      {/* Over-Allocation Warnings */}
       {stats.overAllocated > 0 && (
         <Card>
           <div className="flex items-start gap-3">

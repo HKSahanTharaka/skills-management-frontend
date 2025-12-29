@@ -62,7 +62,6 @@ const PersonnelPage = () => {
 
   const handleEdit = useCallback(async (personnel) => {
     try {
-      // Fetch full personnel details including skills
       const fullPersonnel = await personnelService.getById(personnel.id);
       setEditingPersonnel(fullPersonnel.data);
       setShowForm(true);
@@ -80,7 +79,6 @@ const PersonnelPage = () => {
   const handleFormSubmit = async (formData, skills = []) => {
     try {
       if (editingPersonnel) {
-        // When updating, include skills in the payload
         await updateMutation.mutateAsync({
           id: editingPersonnel.id,
           data: {
@@ -90,7 +88,6 @@ const PersonnelPage = () => {
         });
         toast.success(`Personnel updated successfully with ${skills.length} skill(s)!`);
       } else {
-        // When creating, include skills in the initial payload
         await createMutation.mutateAsync({
           ...formData,
           skills: skills,
@@ -200,7 +197,6 @@ const PersonnelPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Personnel Management</h1>
@@ -213,7 +209,6 @@ const PersonnelPage = () => {
         )}
       </div>
 
-      {/* Filters */}
       <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Input
@@ -244,7 +239,6 @@ const PersonnelPage = () => {
         </div>
       </div>
 
-      {/* Table */}
       {data?.data?.length === 0 && !isLoading ? (
         <EmptyState
           icon={Plus}
@@ -273,7 +267,6 @@ const PersonnelPage = () => {
         </>
       )}
 
-      {/* Create/Edit Modal */}
       <Modal
         isOpen={showForm}
         onClose={() => {
@@ -294,7 +287,6 @@ const PersonnelPage = () => {
         />
       </Modal>
 
-      {/* Delete Confirmation Modal */}
       <Modal
         isOpen={!!showDeleteConfirm}
         onClose={() => setShowDeleteConfirm(null)}

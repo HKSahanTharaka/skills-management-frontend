@@ -106,7 +106,6 @@ const PersonnelForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
-      {/* Profile Image Upload */}
       <div className="flex flex-col items-center">
         {imageUrl ? (
           <div className="relative">

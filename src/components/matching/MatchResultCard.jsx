@@ -47,9 +47,7 @@ const MatchResultCard = ({ match, onAllocate, isAllocating }) => {
           </span>
         </div>
 
-        {/* Skills Breakdown */}
         <div className="space-y-2">
-          {/* Matching Skills */}
           {match.matching_skills && match.matching_skills.length > 0 && (
             <div>
               <p className="text-xs font-medium text-gray-700 dark:text-slate-300 mb-1">Matching Skills:</p>
@@ -69,7 +67,6 @@ const MatchResultCard = ({ match, onAllocate, isAllocating }) => {
             </div>
           )}
 
-          {/* Missing Skills */}
           {match.missing_skills && match.missing_skills.length > 0 && (
             <div>
               <p className="text-xs font-medium text-gray-700 dark:text-slate-300 mb-1">Missing Skills:</p>

@@ -41,7 +41,6 @@ const ProjectDetailPage = () => {
       });
       setShowEdit(false);
     } catch (error) {
-      // Error handled by mutation
     }
   };
 
@@ -50,7 +49,6 @@ const ProjectDetailPage = () => {
       await deleteMutation.mutateAsync(id);
       navigate('/projects');
     } catch (error) {
-      // Error handled by mutation
     }
   };
 
@@ -71,7 +69,6 @@ const ProjectDetailPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <Button
           variant="ghost"
@@ -119,7 +116,6 @@ const ProjectDetailPage = () => {
         </div>
       </div>
 
-      {/* Project Info Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <div className="flex items-center gap-3">
@@ -164,14 +160,12 @@ const ProjectDetailPage = () => {
         </Card>
       </div>
 
-      {/* Description */}
       <Card title="Project Description">
         <p className="text-gray-700 dark:text-slate-300 whitespace-pre-wrap">
           {project.description || 'No description available'}
         </p>
       </Card>
 
-      {/* Required Skills */}
       <Card title="Required Skills">
         {project.required_skills && project.required_skills.length > 0 ? (
           <div className="space-y-3">
@@ -198,7 +192,6 @@ const ProjectDetailPage = () => {
         )}
       </Card>
 
-      {/* Allocated Personnel */}
       <Card title="Team Members">
         {project.allocated_personnel && project.allocated_personnel.length > 0 ? (
           <div className="space-y-3">
@@ -236,7 +229,6 @@ const ProjectDetailPage = () => {
         )}
       </Card>
 
-      {/* Edit Modal */}
       <Modal
         isOpen={showEdit}
         onClose={() => setShowEdit(false)}
@@ -251,7 +243,6 @@ const ProjectDetailPage = () => {
         />
       </Modal>
 
-      {/* Delete Confirmation */}
       <Modal
         isOpen={showDeleteConfirm}
         onClose={() => setShowDeleteConfirm(false)}

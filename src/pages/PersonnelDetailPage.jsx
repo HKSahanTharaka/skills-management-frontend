@@ -85,7 +85,6 @@ const PersonnelDetailPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Button
@@ -123,10 +122,8 @@ const PersonnelDetailPage = () => {
         </div>
       </div>
 
-      {/* Profile Card */}
       <Card>
         <div className="flex flex-col md:flex-row gap-6">
-          {/* Profile Image */}
           <div className="flex-shrink-0">
             {personnel.profile_image_url ? (
               <img
@@ -143,7 +140,6 @@ const PersonnelDetailPage = () => {
             )}
           </div>
 
-          {/* Details */}
           <div className="flex-1 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-center gap-3">
@@ -191,7 +187,6 @@ const PersonnelDetailPage = () => {
         </div>
       </Card>
 
-      {/* Skills Section */}
       <Card>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">Skills</h2>
@@ -257,7 +252,6 @@ const PersonnelDetailPage = () => {
         )}
       </Card>
 
-      {/* Projects Section */}
       <Card>
         <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100 mb-4">Projects</h2>
         {allocationsLoading ? (
@@ -312,7 +306,6 @@ const PersonnelDetailPage = () => {
         )}
       </Card>
 
-      {/* Edit Modal */}
       <Modal
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}
@@ -326,7 +319,6 @@ const PersonnelDetailPage = () => {
         />
       </Modal>
 
-      {/* Delete Confirmation Modal */}
       <Modal
         isOpen={showDeleteConfirm}
         onClose={() => setShowDeleteConfirm(false)}
@@ -352,7 +344,6 @@ const PersonnelDetailPage = () => {
         </div>
       </Modal>
 
-      {/* Add Skill Modal */}
       <AddSkillModal
         isOpen={showAddSkillModal}
         onClose={() => setShowAddSkillModal(false)}

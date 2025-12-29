@@ -56,7 +56,6 @@ export const Login = () => {
     <div className="light">
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 px-4">
         <div className="max-w-md w-full space-y-8">
-          {/* Header */}
           <div className="text-center">
             <div className="mx-auto h-20 w-20 rounded-2xl flex items-center justify-center mb-4">
               <img
@@ -71,7 +70,6 @@ export const Login = () => {
             </p>
           </div>
 
-          {/* Form */}
           <div className="bg-white py-8 px-6 shadow-xl rounded-2xl border border-gray-100">
             <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
               <Input
@@ -115,7 +113,6 @@ export const Login = () => {
             </div>
           </div>
 
-          {/* Footer */}
           <p className="text-center text-xs text-gray-500">
             By signing in, you agree to our Terms of Service and Privacy Policy
           </p>

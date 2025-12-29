@@ -22,11 +22,9 @@ const ProjectCard = ({ project, onClick }) => {
       onClick={() => onClick(project)}
       className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all cursor-pointer overflow-hidden"
     >
-      {/* Status bar */}
       <div className={`h-2 ${getStatusBarColor(project.status)}`} />
 
       <div className="p-6">
-        {/* Header */}
         <div className="flex items-start justify-between mb-3">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 line-clamp-1">
             {project.project_name}
@@ -36,12 +34,10 @@ const ProjectCard = ({ project, onClick }) => {
           </Badge>
         </div>
 
-        {/* Description */}
         <p className="text-sm text-gray-600 dark:text-slate-400 line-clamp-2 mb-4">
           {project.description || 'No description available'}
         </p>
 
-        {/* Stats */}
         <div className="space-y-2">
           <div className="flex items-center text-sm text-gray-500 dark:text-slate-400">
             <Calendar className="h-4 w-4 mr-2" />
@@ -65,7 +61,6 @@ const ProjectCard = ({ project, onClick }) => {
           )}
         </div>
 
-        {/* Required Skills Preview */}
         {project.required_skills && project.required_skills.length > 0 && (
           <div className="mt-4 pt-4 border-t border-gray-100 dark:border-slate-700">
             <div className="flex flex-wrap gap-1">

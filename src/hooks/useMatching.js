@@ -8,7 +8,7 @@ export const useMatchPersonnel = (projectId, options = {}) => {
     queryKey: [QUERY_KEYS.MATCHING, projectId],
     queryFn: async () => {
       const result = await matchingService.findMatchingPersonnel(projectId);
-      return result; // Return the full response including requiredSkills
+      return result;
     },
     enabled: options.enabled !== undefined ? options.enabled : !!projectId,
   });
@@ -122,7 +122,6 @@ export const useAllocateToProject = () => {
 
   return useMutation({
     mutationFn: ({ projectId, personnelId, allocationPercentage, startDate, endDate, roleInProject }) => {
-      // Try to get project data from cache
       const projectResponse = queryClient.getQueryData([QUERY_KEYS.PROJECT_DETAIL, projectId]);
       const project = projectResponse?.data;
       
