@@ -206,19 +206,19 @@ const ProjectDetailPage = () => {
                   {person.profile_picture_url ? (
                     <img
                       src={person.profile_picture_url}
-                      alt={person.full_name}
+                      alt={person.personnel_name}
                       className="h-10 w-10 rounded-full object-cover"
                     />
                   ) : (
                     <div className="h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
                       <span className="text-primary-600 dark:text-primary-400 font-semibold">
-                        {person.full_name?.charAt(0)}
+                        {person.personnel_name?.charAt(0)}
                       </span>
                     </div>
                   )}
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-slate-100">{person.full_name}</p>
-                    <p className="text-sm text-gray-600 dark:text-slate-400">{person.email}</p>
+                    <p className="font-medium text-gray-900 dark:text-slate-100">{person.personnel_name}</p>
+                    <p className="text-sm text-gray-600 dark:text-slate-400">{person.personnel_email}</p>
                   </div>
                 </div>
                 <Badge variant="secondary">{person.allocation_percentage || 100}%</Badge>

@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Search, Filter, SlidersHorizontal } from 'lucide-react';
+import { Search, Filter, SlidersHorizontal, Users, Calendar, Briefcase } from 'lucide-react';
 import { useProjects } from '../../hooks/useProjects';
-import { useMatchPersonnel, useAllocateToProject } from '../../hooks/useMatching';
+import { useMatchPersonnel, useAllocateToProject, useProjectAllocations } from '../../hooks/useMatching';
+import { formatDisplayDate } from '../../utils/helpers';
 import Select from '../common/Select';
 import Input from '../common/Input';
 import Button from '../common/Button';
@@ -31,6 +32,9 @@ const MatchingInterface = () => {
     enabled: !!selectedProject,
   });
 
+  const { data: allocations, isLoading: isLoadingAllocations } = useProjectAllocations(selectedProject);
+  const assignedPersonnel = allocations || [];
+
   // Extract required skills count
   const totalRequiredSkills = matchingResponse?.requiredSkills?.length || 0;
 
@@ -42,19 +46,20 @@ const MatchingInterface = () => {
     role_title: match.roleTitle,
     experience_level: match.experienceLevel,
     match_score: match.matchScore,
-    matching_skills: match.matchingSkills?.filter(s => s.meets).map(s => ({
+    matching_skills: match.matchingSkills?.map(s => ({
       skill_name: s.skillName,
       proficiency_level: s.actual,
       min_required: s.required,
     })) || [],
-    missing_skills: match.matchingSkills?.filter(s => !s.meets).map(s => ({
+    missing_skills: match.missingSkills?.map(s => ({
       skill_name: s.skillName,
       min_proficiency_level: s.required,
+      actual_proficiency: s.actual,
     })) || [],
     total_required_skills: totalRequiredSkills,
     availability_percentage: match.availability,
     profile_picture_url: match.profileImageUrl,
-    years_of_experience: 0, // This data is not provided by backend
+    years_of_experience: 0,
   })) || [];
 
   const allocateMutation = useAllocateToProject();
@@ -232,9 +237,69 @@ const MatchingInterface = () => {
         </Card>
       )}
 
+      {/* Already Assigned Personnel */}
+      {selectedProject && assignedPersonnel.length > 0 && (
+        <Card>
+          <div className="flex items-center gap-2 mb-4">
+            <Users className="h-5 w-5 text-primary-600 dark:text-primary-400" />
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100">
+              Already Assigned Personnel ({assignedPersonnel.length})
+            </h3>
+          </div>
+          <div className="space-y-3">
+            {assignedPersonnel.map((allocation) => (
+              <div
+                key={allocation.id}
+                className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg border border-gray-200 dark:border-slate-600"
+              >
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-1">
+                    <h4 className="font-medium text-gray-900 dark:text-slate-100">
+                      {allocation.personnel_name}
+                    </h4>
+                    <Badge variant="success" size="sm">
+                      Assigned
+                    </Badge>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-slate-400">
+                    <span className="flex items-center gap-1">
+                      <Briefcase className="h-3 w-3" />
+                      {allocation.role_title || 'N/A'}
+                    </span>
+                    {allocation.role_in_project && (
+                      <span className="flex items-center gap-1">
+                        Role: {allocation.role_in_project}
+                      </span>
+                    )}
+                    <span className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      {formatDisplayDate(allocation.start_date)} - {formatDisplayDate(allocation.end_date)}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-xl font-bold text-primary-600 dark:text-primary-400">
+                    {allocation.allocation_percentage}%
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-slate-400">
+                    Allocated
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
       {/* Results */}
       {isLoadingMatches ? (
         <Loading />
+      ) : !selectedProject ? (
+        <EmptyState
+          icon={Search}
+          title="Select a project to get started"
+          description="Choose a project from the dropdown above to find matching personnel"
+        />
       ) : filteredMatches && filteredMatches.length > 0 ? (
         <div className="space-y-4">
           {filteredMatches.map((match) => (
@@ -246,17 +311,11 @@ const MatchingInterface = () => {
             />
           ))}
         </div>
-      ) : matches && matches.length === 0 ? (
+      ) : (
         <EmptyState
           icon={Filter}
           title="No matches found"
           description="No personnel match the requirements for this project"
-        />
-      ) : (
-        <EmptyState
-          icon={Search}
-          title="Select a project to get started"
-          description="Choose a project from the dropdown above to find matching personnel"
         />
       )}
     </div>

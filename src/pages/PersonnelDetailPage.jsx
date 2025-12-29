@@ -1,8 +1,10 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Mail, Briefcase, Calendar, Edit, Trash2, Plus } from 'lucide-react';
-import { usePersonnelDetail, useDeletePersonnel } from '../hooks/usePersonnel';
+import { ArrowLeft, Mail, Briefcase, Calendar, Edit, Trash2, Plus, X, TrendingUp } from 'lucide-react';
+import { usePersonnelDetail, useDeletePersonnel, useAssignSkill, useRemoveSkill } from '../hooks/usePersonnel';
+import { usePersonnelAllocations } from '../hooks/useMatching';
+import { useSkills } from '../hooks/useSkills';
 import { usePermissions } from '../hooks/usePermissions';
-import { getExperienceLevelColor, formatDisplayDate } from '../utils/helpers';
+import { getExperienceLevelColor, formatDisplayDate, getProficiencyColor, getProjectStatusColor } from '../utils/helpers';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
 import Card from '../components/common/Card';
@@ -18,11 +20,19 @@ const PersonnelDetailPage = () => {
   const permissions = usePermissions();
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showAddSkillModal, setShowAddSkillModal] = useState(false);
 
   const { data: response, isLoading } = usePersonnelDetail(id);
   const personnel = response?.data;
+  const { data: allocationsData, isLoading: allocationsLoading } = usePersonnelAllocations(id);
+  const allocations = allocationsData || [];
+  const { data: skillsResponse } = useSkills();
+  const allSkills = skillsResponse?.data || [];
+  
   const updateMutation = useUpdatePersonnel();
   const deleteMutation = useDeletePersonnel();
+  const assignSkillMutation = useAssignSkill();
+  const removeSkillMutation = useRemoveSkill();
 
   const handleEdit = () => {
     setShowEditModal(true);
@@ -41,7 +51,16 @@ const PersonnelDetailPage = () => {
       });
       setShowEditModal(false);
     } catch (error) {
-      // Error is handled by the mutation
+    }
+  };
+
+  const handleRemoveSkill = async (skillId) => {
+    try {
+      await removeSkillMutation.mutateAsync({
+        personnelId: id,
+        skillId: skillId,
+      });
+    } catch (error) {
     }
   };
 
@@ -91,10 +110,9 @@ const PersonnelDetailPage = () => {
           )}
           {permissions.canDeletePersonnel && (
             <Button
-              variant="outline"
+              variant="danger"
               onClick={() => setShowDeleteConfirm(true)}
               leftIcon={<Trash2 className="h-4 w-4" />}
-              className="text-danger-600 hover:text-danger-700 hover:border-danger-300"
             >
               Delete
             </Button>
@@ -179,22 +197,116 @@ const PersonnelDetailPage = () => {
               size="sm"
               variant="outline"
               leftIcon={<Plus className="h-4 w-4" />}
+              onClick={() => setShowAddSkillModal(true)}
             >
               Add Skill
             </Button>
           )}
         </div>
-        <div className="text-center py-8 text-gray-500 dark:text-slate-400">
-          <p>Skills management feature coming soon...</p>
-        </div>
+        {personnel?.skills && personnel.skills.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {personnel.skills.map((skill) => (
+              <div
+                key={skill.id}
+                className="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-700/50 rounded-lg border border-gray-200 dark:border-slate-600"
+              >
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h3 className="font-medium text-gray-900 dark:text-slate-100">
+                      {skill.skill_name}
+                    </h3>
+                    <Badge variant={getProficiencyColor(skill.proficiency_level).replace('badge-', '')} size="sm">
+                      {skill.proficiency_level}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-slate-400">
+                    {skill.category && (
+                      <span className="flex items-center gap-1">
+                        <Briefcase className="h-3 w-3" />
+                        {skill.category}
+                      </span>
+                    )}
+                    {skill.years_of_experience > 0 && (
+                      <span className="flex items-center gap-1">
+                        <TrendingUp className="h-3 w-3" />
+                        {skill.years_of_experience} {skill.years_of_experience === 1 ? 'year' : 'years'}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                {permissions.canManagePersonnelSkills && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleRemoveSkill(skill.skill_id)}
+                    className="text-danger-600 hover:text-danger-700"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8 text-gray-500 dark:text-slate-400">
+            <p>No skills assigned yet</p>
+          </div>
+        )}
       </Card>
 
       {/* Projects Section */}
       <Card>
         <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100 mb-4">Projects</h2>
-        <div className="text-center py-8 text-gray-500 dark:text-slate-400">
-          <p>Project allocations will be shown here...</p>
-        </div>
+        {allocationsLoading ? (
+          <div className="text-center py-8">
+            <Loading size="md" />
+          </div>
+        ) : allocations && allocations.length > 0 ? (
+          <div className="space-y-3">
+            {allocations.map((allocation) => (
+              <div
+                key={allocation.id}
+                className="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors cursor-pointer border border-gray-200 dark:border-slate-600"
+                onClick={() => navigate(`/projects/${allocation.project_id}`)}
+              >
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-2">
+                    <h3 className="font-medium text-gray-900 dark:text-slate-100">
+                      {allocation.project_name}
+                    </h3>
+                    <Badge variant={getProjectStatusColor(allocation.project_status).replace('badge-', '')} size="sm">
+                      {allocation.project_status}
+                    </Badge>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-slate-400">
+                    {allocation.role_in_project && (
+                      <span className="flex items-center gap-1">
+                        <Briefcase className="h-3 w-3" />
+                        {allocation.role_in_project}
+                      </span>
+                    )}
+                    <span className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      {formatDisplayDate(allocation.start_date)} - {formatDisplayDate(allocation.end_date)}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">
+                    {allocation.allocation_percentage}%
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-slate-400">
+                    Allocation
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8 text-gray-500 dark:text-slate-400">
+            <p>No project allocations yet</p>
+          </div>
+        )}
       </Card>
 
       {/* Edit Modal */}
@@ -236,7 +348,118 @@ const PersonnelDetailPage = () => {
           </div>
         </div>
       </Modal>
+
+      {/* Add Skill Modal */}
+      <AddSkillModal
+        isOpen={showAddSkillModal}
+        onClose={() => setShowAddSkillModal(false)}
+        personnelId={id}
+        allSkills={allSkills}
+        existingSkills={personnel?.skills || []}
+        assignSkillMutation={assignSkillMutation}
+      />
     </div>
+  );
+};
+
+const AddSkillModal = ({ isOpen, onClose, personnelId, allSkills, existingSkills, assignSkillMutation }) => {
+  const [selectedSkillId, setSelectedSkillId] = useState('');
+  const [proficiencyLevel, setProficiencyLevel] = useState('Intermediate');
+  const [yearsOfExperience, setYearsOfExperience] = useState(0);
+
+  const existingSkillIds = existingSkills.map(s => s.skill_id);
+  const availableSkills = allSkills.filter(skill => !existingSkillIds.includes(skill.id));
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!selectedSkillId) return;
+
+    try {
+      await assignSkillMutation.mutateAsync({
+        personnelId,
+        skillData: {
+          skill_id: parseInt(selectedSkillId),
+          proficiency_level: proficiencyLevel,
+          years_of_experience: parseInt(yearsOfExperience),
+        },
+      });
+      setSelectedSkillId('');
+      setProficiencyLevel('Intermediate');
+      setYearsOfExperience(0);
+      onClose();
+    } catch (error) {
+    }
+  };
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} title="Add Skill">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
+            Skill
+          </label>
+          <select
+            value={selectedSkillId}
+            onChange={(e) => setSelectedSkillId(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            required
+          >
+            <option value="">Select a skill</option>
+            {availableSkills.map((skill) => (
+              <option key={skill.id} value={skill.id}>
+                {skill.skill_name} {skill.category && `(${skill.category})`}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
+            Proficiency Level
+          </label>
+          <select
+            value={proficiencyLevel}
+            onChange={(e) => setProficiencyLevel(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            required
+          >
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+            <option value="Expert">Expert</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
+            Years of Experience
+          </label>
+          <input
+            type="number"
+            min="0"
+            max="50"
+            value={yearsOfExperience}
+            onChange={(e) => setYearsOfExperience(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          />
+        </div>
+
+        <div className="flex gap-3 justify-end pt-4">
+          <Button type="button" variant="outline" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            variant="primary"
+            isLoading={assignSkillMutation.isPending}
+            disabled={!selectedSkillId || assignSkillMutation.isPending}
+          >
+            Add Skill
+          </Button>
+        </div>
+      </form>
+    </Modal>
   );
 };
 

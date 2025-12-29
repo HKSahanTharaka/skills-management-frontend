@@ -141,14 +141,7 @@ const Register = () => {
                   required
                 />
                 <label htmlFor="terms" className="ml-2 text-sm text-gray-600">
-                  I agree to the{' '}
-                  <a href="#" className="text-primary-600 hover:text-primary-700 font-medium">
-                    Terms and Conditions
-                  </a>{' '}
-                  and{' '}
-                  <a href="#" className="text-primary-600 hover:text-primary-700 font-medium">
-                    Privacy Policy
-                  </a>
+                  I agree to the Terms and Conditions and Privacy Policy
                 </label>
               </div>
 

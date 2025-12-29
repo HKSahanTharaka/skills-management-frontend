@@ -1,4 +1,4 @@
-import { format, eachMonthOfInterval, addMonths, startOfMonth } from 'date-fns';
+import { format, eachMonthOfInterval, addMonths, startOfMonth, endOfMonth } from 'date-fns';
 import Card from '../common/Card';
 import Badge from '../common/Badge';
 
@@ -37,7 +37,7 @@ const AllocationChart = ({ allocations }) => {
 
   const calculateMonthAllocation = (personnelAllocations, month) => {
     const monthStart = startOfMonth(month);
-    const monthEnd = addMonths(monthStart, 1);
+    const monthEnd = endOfMonth(month);
 
     let total = 0;
     const projectAllocations = [];

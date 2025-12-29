@@ -5,6 +5,8 @@ import { usePersonnel, useDeletePersonnel } from '../hooks/usePersonnel';
 import { EXPERIENCE_LEVELS } from '../utils/constants';
 import { getExperienceLevelColor } from '../utils/helpers';
 import { usePermissions } from '../hooks/usePermissions';
+import { personnelService } from '../services/personnel.service';
+import { toast } from 'react-hot-toast';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import Select from '../components/common/Select';
@@ -58,7 +60,7 @@ const PersonnelPage = () => {
     setShowDeleteConfirm(null);
   };
 
-  const handleFormSubmit = async (formData) => {
+  const handleFormSubmit = async (formData, skills = []) => {
     try {
       if (editingPersonnel) {
         await updateMutation.mutateAsync({
@@ -66,12 +68,27 @@ const PersonnelPage = () => {
           data: formData,
         });
       } else {
-        await createMutation.mutateAsync(formData);
+        const result = await createMutation.mutateAsync(formData);
+        
+        if (skills.length > 0 && result?.data?.id) {
+          for (const skill of skills) {
+            try {
+              await personnelService.assignSkill(result.data.id, {
+                skill_id: skill.skill_id,
+                proficiency_level: skill.proficiency_level,
+                years_of_experience: skill.years_of_experience,
+              });
+            } catch (skillError) {
+              console.error('Error assigning skill:', skillError);
+            }
+          }
+          toast.success(`Personnel created with ${skills.length} skill(s) assigned!`);
+        }
       }
       setShowForm(false);
       setEditingPersonnel(null);
     } catch (error) {
-      // Error is handled by the mutation
+      
     }
   };
 

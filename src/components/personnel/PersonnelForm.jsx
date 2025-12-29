@@ -2,10 +2,11 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { Upload, X } from 'lucide-react';
+import { Upload, X, Plus, Trash2 } from 'lucide-react';
 import { personnelSchema } from '../../utils/validation';
-import { EXPERIENCE_LEVELS } from '../../utils/constants';
+import { EXPERIENCE_LEVELS, PROFICIENCY_LEVELS } from '../../utils/constants';
 import { cloudinaryService } from '../../services/cloudinary.service';
+import { useSkills } from '../../hooks/useSkills';
 import Button from '../common/Button';
 import Input from '../common/Input';
 import Select from '../common/Select';
@@ -13,6 +14,9 @@ import Select from '../common/Select';
 const PersonnelForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
   const [imageUrl, setImageUrl] = useState(initialData?.profile_image_url || '');
   const [isUploading, setIsUploading] = useState(false);
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  
+  const { data: skillsData } = useSkills({ limit: 1000 });
 
   const {
     register,
@@ -63,14 +67,30 @@ const PersonnelForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
     setValue('profile_image_url', '');
   };
 
+  const handleAddSkill = () => {
+    setSelectedSkills([...selectedSkills, { skill_id: '', proficiency_level: 'Beginner', years_of_experience: 0 }]);
+  };
+
+  const handleRemoveSkill = (index) => {
+    setSelectedSkills(selectedSkills.filter((_, i) => i !== index));
+  };
+
+  const handleSkillChange = (index, field, value) => {
+    const updated = [...selectedSkills];
+    updated[index][field] = value;
+    setSelectedSkills(updated);
+  };
+
   const onFormSubmit = (data) => {
-    // Clean the data: remove empty strings and send proper values
     const cleanedData = {
       ...data,
       profile_image_url: imageUrl || undefined,
       bio: data.bio || undefined,
     };
-    onSubmit(cleanedData);
+    
+    const validSkills = selectedSkills.filter(skill => skill.skill_id && skill.proficiency_level);
+    
+    onSubmit(cleanedData, validSkills);
   };
 
   return (
@@ -173,6 +193,84 @@ const PersonnelForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
           <p className="mt-1 text-sm text-danger-600">{errors.bio.message}</p>
         )}
       </div>
+
+      {!initialData && (
+        <div className="border-t border-gray-200 pt-4">
+          <div className="flex items-center justify-between mb-3">
+            <label className="block text-sm font-medium text-gray-700">
+              Skills (Optional)
+            </label>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleAddSkill}
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              Add Skill
+            </Button>
+          </div>
+
+          {selectedSkills.length > 0 && (
+            <div className="space-y-3">
+              {selectedSkills.map((skill, index) => (
+                <div key={index} className="flex gap-2 items-start p-3 bg-gray-50 dark:bg-slate-800 rounded-lg">
+                  <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-2">
+                    <select
+                      value={skill.skill_id}
+                      onChange={(e) => handleSkillChange(index, 'skill_id', e.target.value)}
+                      className="w-full rounded-lg border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-slate-700 dark:text-white"
+                    >
+                      <option value="">Select Skill</option>
+                      {skillsData?.data?.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.skill_name}
+                        </option>
+                      ))}
+                    </select>
+
+                    <select
+                      value={skill.proficiency_level}
+                      onChange={(e) => handleSkillChange(index, 'proficiency_level', e.target.value)}
+                      className="w-full rounded-lg border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-slate-700 dark:text-white"
+                    >
+                      {PROFICIENCY_LEVELS.map((level) => (
+                        <option key={level} value={level}>
+                          {level}
+                        </option>
+                      ))}
+                    </select>
+
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.5"
+                      placeholder="Years"
+                      value={skill.years_of_experience}
+                      onChange={(e) => handleSkillChange(index, 'years_of_experience', parseFloat(e.target.value) || 0)}
+                      className="w-full rounded-lg border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-slate-700 dark:text-white"
+                    />
+                  </div>
+                  
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveSkill(index)}
+                    className="p-2 text-danger-600 hover:bg-danger-50 dark:hover:bg-danger-900/20 rounded-lg transition-colors"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {selectedSkills.length === 0 && (
+            <p className="text-sm text-gray-500 dark:text-slate-400 italic">
+              No skills added yet. You can add skills now or later.
+            </p>
+          )}
+        </div>
+      )}
 
       <div className="flex gap-3 pt-4 border-t border-gray-200">
         <Button

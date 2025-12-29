@@ -15,6 +15,7 @@ import ProjectsPage from './pages/ProjectsPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import MatchingPage from './pages/MatchingPage';
 import AvailabilityPage from './pages/AvailabilityPage';
+import ProfilePage from './pages/ProfilePage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -134,6 +135,17 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <AvailabilityPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <ProfilePage />
                 </Layout>
               </ProtectedRoute>
             }

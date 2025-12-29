@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, Search } from 'lucide-react';
 import { useProjects, useCreateProject, useUpdateProject, useDeleteProject } from '../hooks/useProjects';
 import { PROJECT_STATUSES } from '../utils/constants';
+import { projectService } from '../services/project.service';
+import { toast } from 'react-hot-toast';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import Select from '../components/common/Select';
@@ -54,7 +56,7 @@ const ProjectsPage = () => {
     setShowDeleteConfirm(null);
   };
 
-  const handleFormSubmit = async (formData) => {
+  const handleFormSubmit = async (formData, requiredSkills = []) => {
     try {
       if (editingProject) {
         await updateMutation.mutateAsync({
@@ -62,12 +64,26 @@ const ProjectsPage = () => {
           data: formData,
         });
       } else {
-        await createMutation.mutateAsync(formData);
+        const result = await createMutation.mutateAsync(formData);
+        
+        if (requiredSkills.length > 0 && result?.data?.id) {
+          for (const skill of requiredSkills) {
+            try {
+              await projectService.addRequiredSkill(result.data.id, {
+                skill_id: skill.skill_id,
+                minimum_proficiency: skill.minimum_proficiency,
+              });
+            } catch (skillError) {
+              console.error('Error adding required skill:', skillError);
+            }
+          }
+          toast.success(`Project created with ${requiredSkills.length} required skill(s)!`);
+        }
       }
       setShowForm(false);
       setEditingProject(null);
     } catch (error) {
-      // Error handled by mutation
+      
     }
   };
 
@@ -113,17 +129,19 @@ const ProjectsPage = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {PROJECT_STATUSES.map((status) => {
-          const count = data?.data?.filter((p) => p.status === status).length || 0;
-          return (
-            <div key={status} className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-slate-400">{status}</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-slate-100 mt-1">{count}</p>
-            </div>
-          );
-        })}
-      </div>
+      {!filters.status && !filters.search && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {PROJECT_STATUSES.map((status) => {
+            const count = data?.data?.filter((p) => p.status === status).length || 0;
+            return (
+              <div key={status} className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4">
+                <p className="text-sm font-medium text-gray-600 dark:text-slate-400">{status}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-slate-100 mt-1">{count}</p>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Projects Grid */}
       {data?.data?.length === 0 && !isLoading ? (

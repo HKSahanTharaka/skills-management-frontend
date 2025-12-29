@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Search, Edit, Trash2, Grid, List } from 'lucide-react';
+import { Plus, Search, Edit, Trash2 } from 'lucide-react';
 import { useSkills, useCreateSkill, useUpdateSkill, useDeleteSkill } from '../hooks/useSkills';
 import { SKILL_CATEGORIES } from '../utils/constants';
 import { usePermissions } from '../hooks/usePermissions';
@@ -9,14 +9,12 @@ import Select from '../components/common/Select';
 import Table from '../components/common/Table';
 import Modal from '../components/common/Modal';
 import Badge from '../components/common/Badge';
-import Card, { CardGrid } from '../components/common/Card';
 import EmptyState from '../components/common/EmptyState';
 import Pagination from '../components/common/Pagination';
 import SkillForm from '../components/skills/SkillForm';
 
 const SkillsPage = () => {
   const permissions = usePermissions();
-  const [viewMode, setViewMode] = useState('grid');
   const [showForm, setShowForm] = useState(false);
   const [editingSkill, setEditingSkill] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
@@ -24,7 +22,7 @@ const SkillsPage = () => {
     search: '',
     category: '',
     page: 1,
-    limit: viewMode === 'grid' ? 12 : 10,
+    limit: 10,
   });
 
   const { data, isLoading } = useSkills(filters);
@@ -181,26 +179,10 @@ const SkillsPage = () => {
             value={filters.category}
             onChange={(e) => handleCategoryChange(e.target.value)}
           />
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center justify-end">
             <span className="text-sm text-gray-600 dark:text-slate-400">
               {data?.pagination?.total || 0} skills
             </span>
-            <div className="flex gap-1">
-              <Button
-                size="sm"
-                variant={viewMode === 'grid' ? 'primary' : 'ghost'}
-                onClick={() => setViewMode('grid')}
-              >
-                <Grid className="h-4 w-4" />
-              </Button>
-              <Button
-                size="sm"
-                variant={viewMode === 'list' ? 'primary' : 'ghost'}
-                onClick={() => setViewMode('list')}
-              >
-                <List className="h-4 w-4" />
-              </Button>
-            </div>
           </div>
         </div>
       </div>
@@ -216,66 +198,11 @@ const SkillsPage = () => {
         />
       ) : (
         <>
-          {viewMode === 'grid' ? (
-            <CardGrid cols={3}>
-              {data?.data?.map((skill) => (
-                <Card
-                  key={skill.id}
-                  hoverable
-                  onClick={permissions.canEditSkill ? () => handleEdit(skill) : undefined}
-                  header={
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-gray-900 dark:text-slate-100">{skill.skill_name}</h3>
-                      <Badge variant={getCategoryColor(skill.category)} size="sm">
-                        {skill.category}
-                      </Badge>
-                    </div>
-                  }
-                  footer={
-                    <div className="flex gap-2">
-                      {permissions.canEditSkill && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEdit(skill);
-                          }}
-                          leftIcon={<Edit className="h-4 w-4" />}
-                          className="flex-1"
-                        >
-                          Edit
-                        </Button>
-                      )}
-                      {permissions.canDeleteSkill && (
-                        <Button
-                          size="sm"
-                          variant="danger"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setShowDeleteConfirm(skill);
-                          }}
-                          title="Delete skill (Admin only)"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
-                  }
-                >
-                  <p className="text-sm text-gray-600 dark:text-slate-400 line-clamp-3">
-                    {skill.description || 'No description available'}
-                  </p>
-                </Card>
-              ))}
-            </CardGrid>
-          ) : (
-            <Table
-              columns={columns}
-              data={data?.data || []}
-              isLoading={isLoading}
-            />
-          )}
+          <Table
+            columns={columns}
+            data={data?.data || []}
+            isLoading={isLoading}
+          />
 
           {data?.pagination && (
             <Pagination
