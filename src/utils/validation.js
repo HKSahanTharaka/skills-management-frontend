@@ -9,7 +9,7 @@ export const registerSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
   confirmPassword: z.string(),
-  role: z.enum(['admin', 'manager', 'user']).default('user'),
+  role: z.enum(['admin', 'manager']).default('manager'),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ['confirmPassword'],
@@ -21,7 +21,7 @@ export const personnelSchema = z.object({
   role_title: z.string().min(1, 'Role title is required'),
   experience_level: z.enum(['Junior', 'Mid-Level', 'Senior']),
   bio: z.string().optional(),
-  profile_image_url: z.string().url().optional().or(z.literal('')),
+  profile_image_url: z.union([z.string().url(), z.literal('')]).optional(),
 });
 
 export const skillSchema = z.object({

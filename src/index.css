@@ -1,8 +1,94 @@
 @import "tailwindcss";
 
+@variant dark (.dark &);
+
+@theme {
+  /* Intel Blue - Primary Color */
+  --color-primary-50: #e6f4ff;
+  --color-primary-100: #b3ddff;
+  --color-primary-200: #80c7ff;
+  --color-primary-300: #4db0ff;
+  --color-primary-400: #1a9aff;
+  --color-primary-500: #0071C5;
+  /* Intel Blue */
+  --color-primary-600: #0071C5;
+  /* Intel Blue */
+  --color-primary-700: #004d82;
+  --color-primary-800: #003b61;
+  --color-primary-900: #002940;
+  --color-primary-950: #001a29;
+
+  /* Accent Color - Light Intel Blue */
+  --color-accent-50: #e6f9ff;
+  --color-accent-100: #b3edff;
+  --color-accent-200: #80e1ff;
+  --color-accent-300: #4dd5ff;
+  --color-accent-400: #1ac9ff;
+  --color-accent-500: #00A9E0;
+  --color-accent-600: #008dba;
+  --color-accent-700: #007194;
+  --color-accent-800: #00556e;
+  --color-accent-900: #003948;
+
+  /* Secondary - Gray */
+  --color-secondary-50: #f9fafb;
+  --color-secondary-100: #f3f4f6;
+  --color-secondary-200: #e5e7eb;
+  --color-secondary-300: #d1d5db;
+  --color-secondary-400: #9ca3af;
+  --color-secondary-500: #6b7280;
+  --color-secondary-600: #4b5563;
+  --color-secondary-700: #374151;
+  --color-secondary-800: #1f2937;
+  --color-secondary-900: #111827;
+  --color-secondary-950: #030712;
+
+  /* Success - Green */
+  --color-success-50: #e8f5e9;
+  --color-success-100: #c8e6c9;
+  --color-success-200: #a5d6a7;
+  --color-success-300: #81c784;
+  --color-success-400: #66bb6a;
+  --color-success-500: #00C853;
+  --color-success-600: #00b248;
+  --color-success-700: #009c3d;
+  --color-success-800: #008632;
+  --color-success-900: #006622;
+
+  /* Warning - Amber */
+  --color-warning-50: #fff8e1;
+  --color-warning-100: #ffecb3;
+  --color-warning-200: #ffe082;
+  --color-warning-300: #ffd54f;
+  --color-warning-400: #ffca28;
+  --color-warning-500: #FFA000;
+  --color-warning-600: #ff8f00;
+  --color-warning-700: #ff6f00;
+  --color-warning-800: #e65100;
+  --color-warning-900: #bf360c;
+
+  /* Danger - Red */
+  --color-danger-50: #ffebee;
+  --color-danger-100: #ffcdd2;
+  --color-danger-200: #ef9a9a;
+  --color-danger-300: #e57373;
+  --color-danger-400: #ef5350;
+  --color-danger-500: #E53935;
+  --color-danger-600: #d32f2f;
+  --color-danger-700: #c62828;
+  --color-danger-800: #b71c1c;
+  --color-danger-900: #8b0000;
+}
+
 @layer base {
+  * {
+    @apply transition-colors duration-200;
+  }
+
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    @apply bg-gray-50 text-gray-900;
+    @apply dark:bg-slate-900 dark:text-slate-100;
   }
 }
 
@@ -17,48 +103,54 @@
     font-weight: 500;
     transition: background-color 0.2s, color 0.2s;
   }
-  
+
   .btn:disabled {
     pointer-events: none;
     opacity: 0.5;
   }
-  
+
   .btn-primary {
-    background-color: #2563eb;
+    background-color: #0071C5;
+    /* Intel Blue */
     color: white;
   }
-  
+
   .btn-primary:hover {
-    background-color: #1d4ed8;
+    background-color: #005fa3;
   }
-  
+
   .btn-secondary {
-    background-color: #f1f5f9;
-    color: #0f172a;
+    background-color: #f3f4f6;
+    color: #0071C5;
+    /* Intel Blue text */
+    border: 1px solid #e5e7eb;
   }
-  
+
   .btn-secondary:hover {
-    background-color: #e2e8f0;
+    background-color: #e5e7eb;
+    border-color: #0071C5;
   }
-  
+
   .btn-danger {
-    background-color: #dc2626;
+    background-color: #E53935;
     color: white;
   }
-  
+
   .btn-danger:hover {
-    background-color: #b91c1c;
+    background-color: #d32f2f;
   }
-  
+
   .btn-outline {
-    border: 1px solid #d1d5db;
+    border: 1px solid #0071C5;
+    /* Intel Blue border */
     background-color: white;
+    color: #0071C5;
   }
-  
+
   .btn-outline:hover {
-    background-color: #f9fafb;
+    background-color: #e6f4ff;
   }
-  
+
   .input {
     display: flex;
     width: 100%;
@@ -68,22 +160,24 @@
     padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
   }
-  
+
   .input::placeholder {
     color: #9ca3af;
   }
-  
+
   .input:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    border-color: #0071C5;
+    /* Intel Blue focus */
+    box-shadow: 0 0 0 3px rgba(0, 113, 197, 0.1);
   }
-  
+
   .input:disabled {
     cursor: not-allowed;
     opacity: 0.5;
+    background-color: #f9fafb;
   }
-  
+
   .card {
     border-radius: 0.5rem;
     border: 1px solid #e5e7eb;
@@ -91,7 +185,7 @@
     padding: 1.5rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
-  
+
   .badge {
     display: inline-flex;
     align-items: center;
@@ -100,31 +194,29 @@
     font-size: 0.75rem;
     font-weight: 500;
   }
-  
+
   .badge-primary {
-    background-color: #dbeafe;
-    color: #1e40af;
+    background-color: #e6f4ff;
+    color: #004d82;
   }
-  
+
   .badge-success {
-    background-color: #dcfce7;
-    color: #166534;
+    background-color: #e8f5e9;
+    color: #006622;
   }
-  
+
   .badge-warning {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: #fff8e1;
+    color: #e65100;
   }
-  
+
   .badge-danger {
-    background-color: #fee2e2;
-    color: #991b1b;
+    background-color: #ffebee;
+    color: #b71c1c;
   }
-  
+
   .badge-secondary {
-    background-color: #f1f5f9;
-    color: #1e293b;
+    background-color: #f3f4f6;
+    color: #374151;
   }
 }
-
-
