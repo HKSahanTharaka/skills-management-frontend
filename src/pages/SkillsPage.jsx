@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { Plus, Search, Edit, Trash2 } from 'lucide-react';
 import { useSkills, useCreateSkill, useUpdateSkill, useDeleteSkill } from '../hooks/useSkills';
 import { SKILL_CATEGORIES } from '../utils/constants';
@@ -11,6 +11,7 @@ import Modal from '../components/common/Modal';
 import Badge from '../components/common/Badge';
 import EmptyState from '../components/common/EmptyState';
 import Pagination from '../components/common/Pagination';
+import Loading from '../components/common/Loading';
 import SkillForm from '../components/skills/SkillForm';
 
 const SkillsPage = () => {
@@ -30,23 +31,33 @@ const SkillsPage = () => {
   const updateMutation = useUpdateSkill();
   const deleteMutation = useDeleteSkill();
 
-  const handleSearch = (value) => {
+  const handleSearch = useCallback((value) => {
     setFilters((prev) => ({ ...prev, search: value, page: 1 }));
-  };
+  }, []);
 
-  const handleCategoryChange = (value) => {
+  const handleCategoryChange = useCallback((value) => {
     setFilters((prev) => ({ ...prev, category: value, page: 1 }));
-  };
+  }, []);
+
+  const searchIcon = useMemo(() => <Search className="h-4 w-4" />, []);
+
+  const handleSearchChange = useCallback((e) => {
+    handleSearch(e.target.value);
+  }, [handleSearch]);
+
+  const handleSearchClear = useCallback(() => {
+    handleSearch('');
+  }, [handleSearch]);
 
   const handleCreate = () => {
     setEditingSkill(null);
     setShowForm(true);
   };
 
-  const handleEdit = (skill) => {
+  const handleEdit = useCallback((skill) => {
     setEditingSkill(skill);
     setShowForm(true);
-  };
+  }, []);
 
   const handleDelete = async () => {
     if (!showDeleteConfirm) return;
@@ -82,7 +93,7 @@ const SkillsPage = () => {
     return colors[category] || 'secondary';
   };
 
-  const columns = [
+  const columns = useMemo(() => [
     {
       key: 'skill_name',
       label: 'Skill Name',
@@ -141,7 +152,11 @@ const SkillsPage = () => {
         </div>
       ),
     },
-  ];
+  ], [permissions.canEditSkill, permissions.canDeleteSkill, handleEdit]);
+
+  if (isLoading) {
+    return <Loading fullScreen />;
+  }
 
   return (
     <div className="space-y-6">

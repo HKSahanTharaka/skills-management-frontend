@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { X, LayoutDashboard, Users, Award, Briefcase, Target, Calendar, User, Settings, LogOut } from 'lucide-react';
+import { X, LayoutDashboard, Users, Award, Briefcase, Target, Calendar, User, Settings, LogOut, UserCheck } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAppStore } from '../../store/appStore';
 import { useAuthStore } from '../../store/authStore';
@@ -11,7 +11,7 @@ const Sidebar = () => {
   const { user, logout } = useAuthStore();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
-  const menuItems = [
+  const baseMenuItems = [
     {
       path: '/dashboard',
       label: 'Dashboard',
@@ -43,6 +43,19 @@ const Sidebar = () => {
       icon: Calendar,
     },
   ];
+
+  const adminMenuItems = [
+    {
+      path: '/managers',
+      label: 'Managers',
+      icon: UserCheck,
+      adminOnly: true,
+    },
+  ];
+
+  const menuItems = user?.role === 'admin' 
+    ? [...baseMenuItems, ...adminMenuItems]
+    : baseMenuItems;
 
   const isActive = (path) => {
     return location.pathname === path || location.pathname.startsWith(path + '/');

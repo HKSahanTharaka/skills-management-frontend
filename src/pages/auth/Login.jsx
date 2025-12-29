@@ -28,11 +28,25 @@ export const Login = () => {
     try {
       const { token, user } = await authService.login(data);
       login(token, user);
+      
+      if (user.approval_status === 'pending') {
+        navigate('/pending-approval');
+        return;
+      }
+      
       toast.success('Login successful!');
       navigate('/dashboard');
     } catch (error) {
       const errorMessage = error.response?.data?.error?.message || 'Login failed';
-      toast.error(errorMessage);
+      const status = error.response?.data?.error?.status;
+      
+      if (status === 'pending') {
+        toast.error('Your account is pending admin approval');
+      } else if (status === 'rejected') {
+        toast.error('Your account has been rejected. Please contact the administrator');
+      } else {
+        toast.error(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }

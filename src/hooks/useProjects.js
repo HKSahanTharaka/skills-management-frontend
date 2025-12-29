@@ -7,6 +7,7 @@ export const useProjects = (params = {}) => {
   return useQuery({
     queryKey: [QUERY_KEYS.PROJECTS, params],
     queryFn: () => projectService.getAll(params),
+    placeholderData: (previousData) => previousData,
   });
 };
 
@@ -28,7 +29,7 @@ export const useCreateProject = () => {
     mutationFn: projectService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PROJECTS] });
-      toast.success('Project created successfully');
+      // Success message is handled in ProjectsPage.jsx with skill count
     },
     onError: (error) => {
       const message = error.response?.data?.error?.message || 'Failed to create project';

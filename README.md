@@ -1,2 +1,0 @@
-# Skills Management System - Frontend
-

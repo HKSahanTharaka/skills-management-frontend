@@ -14,6 +14,7 @@ import MatchResultCard from './MatchResultCard';
 
 const MatchingInterface = () => {
   const [selectedProject, setSelectedProject] = useState('');
+  const [shouldFetchMatches, setShouldFetchMatches] = useState(false);
   const [filters, setFilters] = useState({
     minMatchScore: 0,
     sortBy: 'match_score',
@@ -29,10 +30,12 @@ const MatchingInterface = () => {
     isLoading: isLoadingMatches,
     refetch: refetchMatches,
   } = useMatchPersonnel(selectedProject, {
-    enabled: !!selectedProject,
+    enabled: shouldFetchMatches && !!selectedProject,
   });
 
-  const { data: allocations, isLoading: isLoadingAllocations } = useProjectAllocations(selectedProject);
+  const { data: allocations, isLoading: isLoadingAllocations } = useProjectAllocations(selectedProject, {
+    enabled: shouldFetchMatches && !!selectedProject,
+  });
   const assignedPersonnel = allocations || [];
 
   // Extract required skills count
@@ -66,10 +69,12 @@ const MatchingInterface = () => {
 
   const handleProjectChange = (projectId) => {
     setSelectedProject(projectId);
+    setShouldFetchMatches(false); // Reset when project changes
   };
 
   const handleFindMatches = () => {
     if (selectedProject) {
+      setShouldFetchMatches(true);
       refetchMatches();
     }
   };

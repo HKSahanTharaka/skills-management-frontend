@@ -7,6 +7,7 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 import Layout from './components/layout/Layout';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import PendingApproval from './pages/auth/PendingApproval';
 import Dashboard from './pages/Dashboard';
 import PersonnelPage from './pages/PersonnelPage';
 import PersonnelDetailPage from './pages/PersonnelDetailPage';
@@ -16,6 +17,7 @@ import ProjectDetailPage from './pages/ProjectDetailPage';
 import MatchingPage from './pages/MatchingPage';
 import AvailabilityPage from './pages/AvailabilityPage';
 import ProfilePage from './pages/ProfilePage';
+import ManagersPage from './pages/ManagersPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,6 +53,7 @@ function App() {
           
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/pending-approval" element={<PendingApproval />} />
           
           <Route
             path="/dashboard"
@@ -146,6 +149,17 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <ProfilePage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/managers"
+            element={
+              <ProtectedRoute requireAdmin>
+                <Layout>
+                  <ManagersPage />
                 </Layout>
               </ProtectedRoute>
             }

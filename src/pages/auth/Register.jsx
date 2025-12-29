@@ -48,8 +48,10 @@ const Register = () => {
   const onSubmit = async (data) => {
     setIsLoading(true);
     try {
-      await authService.register(data);
-      toast.success('Registration successful! Please login.');
+      const response = await authService.register(data);
+      const message = response.message || 'Registration successful!';
+      toast.success(message);
+      
       navigate('/login');
     } catch (error) {
       const errorMessage = error.response?.data?.error?.message || 'Registration failed';
@@ -78,7 +80,12 @@ const Register = () => {
             </p>
           </div>
 
-          {/* Form */}
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <p className="text-sm text-blue-800">
+              <strong>Note:</strong> Manager accounts require admin approval before you can access the system.
+            </p>
+          </div>
+
           <div className="bg-white py-8 px-6 shadow-xl rounded-2xl border border-gray-100">
             <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
               <Input

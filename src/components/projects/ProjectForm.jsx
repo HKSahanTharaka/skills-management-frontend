@@ -105,23 +105,28 @@ const ProjectForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
         />
       </div>
 
-      <Controller
-        name="status"
-        control={control}
-        render={({ field }) => (
-          <Select
-            label="Status"
-            required
-            options={PROJECT_STATUSES.map((status) => ({
-              value: status,
-              label: status,
-            }))}
-            error={errors.status?.message}
-            value={field.value}
-            onChange={(e) => field.onChange(e.target.value)}
-          />
-        )}
-      />
+      {/* Show status field only when editing */}
+      {initialData ? (
+        <Controller
+          name="status"
+          control={control}
+          render={({ field }) => (
+            <Select
+              label="Status"
+              required
+              options={PROJECT_STATUSES.map((status) => ({
+                value: status,
+                label: status,
+              }))}
+              error={errors.status?.message}
+              value={field.value}
+              onChange={(e) => field.onChange(e.target.value)}
+            />
+          )}
+        />
+      ) : (
+        <input type="hidden" {...register('status')} />
+      )}
 
       <div className="border-t border-gray-200 dark:border-slate-700 pt-4">
         <div className="flex items-center justify-between mb-3">

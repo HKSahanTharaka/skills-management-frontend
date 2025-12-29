@@ -7,6 +7,7 @@ export const usePersonnel = (params = {}) => {
   return useQuery({
     queryKey: [QUERY_KEYS.PERSONNEL, params],
     queryFn: () => personnelService.getAll(params),
+    placeholderData: (previousData) => previousData,
   });
 };
 
@@ -25,7 +26,6 @@ export const useCreatePersonnel = () => {
     mutationFn: personnelService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PERSONNEL] });
-      toast.success('Personnel created successfully');
     },
     onError: (error) => {
       const message = error.response?.data?.error?.message || 'Failed to create personnel';
@@ -41,8 +41,7 @@ export const useUpdatePersonnel = () => {
     mutationFn: ({ id, data }) => personnelService.update(id, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PERSONNEL] });
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PERSONNEL_DETAIL, variables.id] });
-      toast.success('Personnel updated successfully');
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PERSONNEL_DETAIL, String(variables.id)] });
     },
     onError: (error) => {
       const message = error.response?.data?.error?.message || 'Failed to update personnel';
@@ -74,7 +73,7 @@ export const useAssignSkill = () => {
     mutationFn: ({ personnelId, skillData }) =>
       personnelService.assignSkill(personnelId, skillData),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PERSONNEL_DETAIL, variables.personnelId] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PERSONNEL_DETAIL, String(variables.personnelId)] });
       toast.success('Skill assigned successfully');
     },
     onError: (error) => {
@@ -91,7 +90,7 @@ export const useRemoveSkill = () => {
     mutationFn: ({ personnelId, skillId }) =>
       personnelService.removeSkill(personnelId, skillId),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PERSONNEL_DETAIL, variables.personnelId] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PERSONNEL_DETAIL, String(variables.personnelId)] });
       toast.success('Skill removed successfully');
     },
     onError: (error) => {

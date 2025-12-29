@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Search, Filter, MoreVertical, Edit, Trash2, Eye } from 'lucide-react';
 import { usePersonnel, useDeletePersonnel } from '../hooks/usePersonnel';
@@ -15,6 +15,7 @@ import Modal from '../components/common/Modal';
 import Badge from '../components/common/Badge';
 import EmptyState from '../components/common/EmptyState';
 import Pagination from '../components/common/Pagination';
+import Loading from '../components/common/Loading';
 import PersonnelForm from '../components/personnel/PersonnelForm';
 import { useCreatePersonnel, useUpdatePersonnel } from '../hooks/usePersonnel';
 
@@ -36,20 +37,30 @@ const PersonnelPage = () => {
   const updateMutation = useUpdatePersonnel();
   const deleteMutation = useDeletePersonnel();
 
-  const handleSearch = (value) => {
+  const handleSearch = useCallback((value) => {
     setFilters((prev) => ({ ...prev, search: value, page: 1 }));
-  };
+  }, []);
 
-  const handleFilterChange = (key, value) => {
+  const handleFilterChange = useCallback((key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value, page: 1 }));
-  };
+  }, []);
+
+  const searchIcon = useMemo(() => <Search className="h-4 w-4" />, []);
+
+  const handleSearchChange = useCallback((e) => {
+    handleSearch(e.target.value);
+  }, [handleSearch]);
+
+  const handleSearchClear = useCallback(() => {
+    handleSearch('');
+  }, [handleSearch]);
 
   const handleCreate = () => {
     setEditingPersonnel(null);
     setShowForm(true);
   };
 
-  const handleEdit = async (personnel) => {
+  const handleEdit = useCallback(async (personnel) => {
     try {
       // Fetch full personnel details including skills
       const fullPersonnel = await personnelService.getById(personnel.id);
@@ -58,7 +69,7 @@ const PersonnelPage = () => {
     } catch (error) {
       toast.error('Failed to load personnel details');
     }
-  };
+  }, []);
 
   const handleDelete = async () => {
     if (!showDeleteConfirm) return;
@@ -93,7 +104,7 @@ const PersonnelPage = () => {
     }
   };
 
-  const columns = [
+  const columns = useMemo(() => [
     {
       key: 'name',
       label: 'Name',
@@ -181,7 +192,11 @@ const PersonnelPage = () => {
         </div>
       ),
     },
-  ];
+  ], [navigate, permissions.canEditAnyPersonnel, permissions.canDeletePersonnel, handleEdit]);
+
+  if (isLoading) {
+    return <Loading fullScreen />;
+  }
 
   return (
     <div className="space-y-6">
@@ -203,11 +218,11 @@ const PersonnelPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Input
             placeholder="Search by name or email..."
-            leftIcon={<Search className="h-4 w-4" />}
+            leftIcon={searchIcon}
             value={filters.search}
-            onChange={(e) => handleSearch(e.target.value)}
+            onChange={handleSearchChange}
             clearable
-            onClear={() => handleSearch('')}
+            onClear={handleSearchClear}
           />
           <Select
             placeholder="Filter by experience"

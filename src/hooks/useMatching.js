@@ -95,14 +95,14 @@ export const usePersonnelAllocations = (personnelId) => {
   });
 };
 
-export const useProjectAllocations = (projectId) => {
+export const useProjectAllocations = (projectId, options = {}) => {
   return useQuery({
     queryKey: [QUERY_KEYS.ALLOCATIONS, 'project', projectId],
     queryFn: async () => {
       const result = await allocationService.getByProjectId(projectId);
       return result.allocations || [];
     },
-    enabled: !!projectId,
+    enabled: options.enabled !== undefined ? options.enabled : !!projectId,
   });
 };
 

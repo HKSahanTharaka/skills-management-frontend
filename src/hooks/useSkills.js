@@ -7,6 +7,7 @@ export const useSkills = (params = {}) => {
   return useQuery({
     queryKey: [QUERY_KEYS.SKILLS, params],
     queryFn: () => skillService.getAll(params),
+    placeholderData: (previousData) => previousData,
   });
 };
 

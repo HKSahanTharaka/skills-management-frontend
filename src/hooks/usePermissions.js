@@ -1,22 +1,5 @@
 import { useAuthStore } from '../store/authStore';
 
-/**
- * Custom hook for checking user permissions
- * 
- * Role-Based Access Control (RBAC):
- * 
- * ADMIN (System Administrator):
- * - Full system access and control
- * - User management and role changes
- * - Delete any resource
- * - System settings and logs
- * 
- * MANAGER (Operations Manager):
- * - Create, view, and update resources
- * - Manage day-to-day operations
- * - Cannot delete critical resources
- * - Cannot manage user accounts
- */
 export const usePermissions = () => {
   const user = useAuthStore(state => state.user);
 
@@ -26,57 +9,57 @@ export const usePermissions = () => {
   const isManagerOrAdmin = isAdmin || isManager;
 
   return {
-    // ===== Role Checks =====
+    //Role Checks
     isAdmin,
     isManager,
     isManagerOrAdmin,
 
-    // ===== Personnel Permissions =====
+    //Personnel Permissions
     canViewAllPersonnel: isManagerOrAdmin,
     canCreatePersonnel: isManagerOrAdmin,
     canEditAnyPersonnel: isManagerOrAdmin,
     canDeletePersonnel: isAdmin, // Only admin can delete
     canExportPersonnel: isManagerOrAdmin,
 
-    // ===== Skills Permissions =====
+    //Skills Permissions
     canViewSkills: isManagerOrAdmin,
     canCreateSkill: isManagerOrAdmin,
     canEditSkill: isManagerOrAdmin,
     canDeleteSkill: isAdmin, // Only admin can delete
 
-    // ===== Projects Permissions =====
+    //Projects Permissions
     canViewAllProjects: isManagerOrAdmin,
     canCreateProject: isManagerOrAdmin,
     canEditProject: isManagerOrAdmin,
     canDeleteProject: isAdmin, // Only admin can delete
     canManageProjectSkills: isManagerOrAdmin,
 
-    // ===== Matching System Permissions =====
+    //Matching System Permissions
     canUseMatching: isManagerOrAdmin,
     canViewMatchResults: isManagerOrAdmin,
     canAssignPersonnelToProject: isManagerOrAdmin,
 
-    // ===== Availability Permissions =====
+    //Availability Permissions
     canViewAllAvailability: isManagerOrAdmin,
     canManageAvailability: isManagerOrAdmin,
 
-    // ===== Allocation Permissions =====
+    //Allocation Permissions
     canViewAllAllocations: isManagerOrAdmin,
     canCreateAllocation: isManagerOrAdmin,
     canEditAllocation: isManagerOrAdmin,
     canDeleteAllocation: isManagerOrAdmin,
 
-    // ===== User Management Permissions =====
+    //User Management Permissions
     canManageUsers: isAdmin, // Only admin
     canChangeUserRoles: isAdmin, // Only admin
     canDeleteUsers: isAdmin, // Only admin
 
-    // ===== Dashboard & Reports =====
+    //Dashboard & Reports
     canViewFullDashboard: isManagerOrAdmin,
     canExportReports: isManagerOrAdmin,
     canViewTeamAnalytics: isManagerOrAdmin,
 
-    // ===== System Administration =====
+    //System Administration
     canAccessSystemSettings: isAdmin, // Only admin
     canViewSystemLogs: isAdmin, // Only admin
     canManageIntegrations: isAdmin, // Only admin

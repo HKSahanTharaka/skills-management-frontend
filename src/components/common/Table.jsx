@@ -96,7 +96,7 @@ const Table = ({
         <thead className="bg-gray-50 dark:bg-slate-900">
           <tr>
             {selectable && (
-              <th className="px-6 py-3 w-12">
+              <th key="select-header" className="px-6 py-3 w-12">
                 <input
                   type="checkbox"
                   checked={selectedRows.size === data.length}
@@ -120,7 +120,7 @@ const Table = ({
                 </div>
               </th>
             ))}
-            {actions && <th className="px-6 py-3 w-16"></th>}
+            {actions && <th key="actions-header" className="px-6 py-3 w-16"></th>}
           </tr>
         </thead>
         <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
@@ -135,7 +135,7 @@ const Table = ({
               onClick={() => onRowClick?.(row)}
             >
               {selectable && (
-                <td className="px-6 py-4">
+                <td key="select-cell" className="px-6 py-4">
                   <input
                     type="checkbox"
                     checked={selectedRows.has(row.id)}
@@ -153,7 +153,7 @@ const Table = ({
                 </td>
               ))}
               {actions && (
-                <td className="px-6 py-4 text-right">
+                <td key="actions-cell" className="px-6 py-4 text-right">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();

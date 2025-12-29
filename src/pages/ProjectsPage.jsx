@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Search } from 'lucide-react';
 import { useProjects, useCreateProject, useUpdateProject, useDeleteProject } from '../hooks/useProjects';
@@ -10,6 +10,7 @@ import Input from '../components/common/Input';
 import Select from '../components/common/Select';
 import Modal from '../components/common/Modal';
 import EmptyState from '../components/common/EmptyState';
+import Loading from '../components/common/Loading';
 import { CardGrid } from '../components/common/Card';
 import Pagination from '../components/common/Pagination';
 import ProjectCard from '../components/projects/ProjectCard';
@@ -32,20 +33,30 @@ const ProjectsPage = () => {
   const updateMutation = useUpdateProject();
   const deleteMutation = useDeleteProject();
 
-  const handleSearch = (value) => {
+  const handleSearch = useCallback((value) => {
     setFilters((prev) => ({ ...prev, search: value, page: 1 }));
-  };
+  }, []);
 
-  const handleStatusChange = (value) => {
+  const handleStatusChange = useCallback((value) => {
     setFilters((prev) => ({ ...prev, status: value, page: 1 }));
-  };
+  }, []);
+
+  const searchIcon = useMemo(() => <Search className="h-4 w-4" />, []);
+
+  const handleSearchChange = useCallback((e) => {
+    handleSearch(e.target.value);
+  }, [handleSearch]);
+
+  const handleSearchClear = useCallback(() => {
+    handleSearch('');
+  }, [handleSearch]);
 
   const handleCreate = () => {
     setEditingProject(null);
     setShowForm(true);
   };
 
-  const handleEdit = async (project) => {
+  const handleEdit = useCallback(async (project) => {
     try {
       // Fetch full project details including required skills
       const fullProject = await projectService.getById(project.id);
@@ -54,7 +65,7 @@ const ProjectsPage = () => {
     } catch (error) {
       toast.error('Failed to load project details');
     }
-  };
+  }, []);
 
   const handleDelete = async () => {
     if (!showDeleteConfirm) return;
@@ -89,6 +100,10 @@ const ProjectsPage = () => {
     }
   };
 
+  if (isLoading) {
+    return <Loading fullScreen />;
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -108,11 +123,11 @@ const ProjectsPage = () => {
           <div className="md:col-span-2">
             <Input
               placeholder="Search projects..."
-              leftIcon={<Search className="h-4 w-4" />}
+              leftIcon={searchIcon}
               value={filters.search}
-              onChange={(e) => handleSearch(e.target.value)}
+              onChange={handleSearchChange}
               clearable
-              onClear={() => handleSearch('')}
+              onClear={handleSearchClear}
             />
           </div>
           <Select
