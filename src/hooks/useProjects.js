@@ -19,7 +19,6 @@ export const useProjectDetail = (id) => {
   });
 };
 
-// Alias for convenience
 export const useProject = useProjectDetail;
 
 export const useCreateProject = () => {
@@ -29,7 +28,6 @@ export const useCreateProject = () => {
     mutationFn: projectService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PROJECTS] });
-      // Success message is handled in ProjectsPage.jsx with skill count
     },
     onError: (error) => {
       const message = error.response?.data?.error?.message || 'Failed to create project';

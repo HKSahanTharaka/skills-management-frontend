@@ -38,10 +38,8 @@ const MatchingInterface = () => {
   });
   const assignedPersonnel = allocations || [];
 
-  // Extract required skills count
   const totalRequiredSkills = matchingResponse?.requiredSkills?.length || 0;
 
-  // Map backend response to expected format
   const matches = matchingResponse?.matchedPersonnel?.map(match => ({
     id: match.personnelId,
     full_name: match.name,
@@ -89,7 +87,6 @@ const MatchingInterface = () => {
         endDate: selectedProjectData?.end_date,
       });
     } catch (error) {
-      // Error handled by mutation
     }
   };
 
@@ -116,7 +113,6 @@ const MatchingInterface = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Project Matching</h1>
         <p className="mt-2 text-gray-600 dark:text-slate-400">
@@ -124,7 +120,6 @@ const MatchingInterface = () => {
         </p>
       </div>
 
-      {/* Project Selection */}
       <Card>
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -156,7 +151,6 @@ const MatchingInterface = () => {
             </div>
           </div>
 
-          {/* Project Info */}
           {selectedProjectData && (
             <div className="p-4 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
               <div className="flex items-start justify-between mb-3">
@@ -189,7 +183,6 @@ const MatchingInterface = () => {
         </div>
       </Card>
 
-      {/* Filters */}
       {matches && matches.length > 0 && (
         <Card>
           <div className="flex items-center justify-between mb-4">
@@ -242,7 +235,6 @@ const MatchingInterface = () => {
         </Card>
       )}
 
-      {/* Already Assigned Personnel */}
       {selectedProject && assignedPersonnel.length > 0 && (
         <Card>
           <div className="flex items-center gap-2 mb-4">
@@ -296,7 +288,6 @@ const MatchingInterface = () => {
         </Card>
       )}
 
-      {/* Results */}
       {isLoadingMatches ? (
         <Loading />
       ) : !selectedProject ? (

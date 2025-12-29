@@ -36,7 +36,6 @@ const AvailabilityPage = () => {
     { enabled: !!selectedPersonnel && activeTab === 'calendar' }
   );
 
-  // Fetch allocations for selected project
   const { data: allocationsData, isLoading: isLoadingAllocations } = useProjectAllocations(
     selectedProject
   );
@@ -64,7 +63,6 @@ const AvailabilityPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Availability & Allocation Management</h1>
         <p className="mt-2 text-gray-600 dark:text-slate-400">
@@ -72,7 +70,6 @@ const AvailabilityPage = () => {
         </p>
       </div>
 
-      {/* Tabs */}
       <Card>
         <div className="border-b border-gray-200 dark:border-slate-700">
           <nav className="-mb-px flex space-x-8">
@@ -99,10 +96,8 @@ const AvailabilityPage = () => {
         </div>
       </Card>
 
-      {/* Tab Content */}
       {activeTab === 'calendar' && (
         <div className="space-y-6">
-          {/* Personnel Selector */}
           <Card>
             <Select
               label="Select Personnel"
@@ -119,7 +114,6 @@ const AvailabilityPage = () => {
             />
           </Card>
 
-          {/* Calendar */}
           {selectedPersonnel ? (
             isLoadingAvailability ? (
               <Loading />
@@ -144,7 +138,6 @@ const AvailabilityPage = () => {
 
       {activeTab === 'allocations' && (
         <div className="space-y-6">
-          {/* Project Selector */}
           <Card>
             <Select
               label="Select Project"

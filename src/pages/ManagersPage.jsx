@@ -328,7 +328,6 @@ const ManagersPage = () => {
         </div>
       </Card>
 
-      {/* Delete Confirmation Modal */}
       <Modal
         isOpen={!!showDeleteConfirm}
         onClose={() => setShowDeleteConfirm(null)}

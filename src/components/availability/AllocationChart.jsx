@@ -66,10 +66,8 @@ const AllocationChart = ({ allocations }) => {
           <Badge variant="secondary">{personnel.length} Personnel</Badge>
         </div>
 
-        {/* Timeline */}
         <div className="overflow-x-auto">
           <div className="min-w-full">
-            {/* Header */}
             <div className="flex border-b border-gray-200 dark:border-slate-700">
               <div className="w-48 flex-shrink-0 p-3 font-medium text-gray-700 dark:text-slate-300">Personnel</div>
               {months.map((month) => (
@@ -82,7 +80,6 @@ const AllocationChart = ({ allocations }) => {
               ))}
             </div>
 
-            {/* Rows */}
             {personnel.length > 0 ? (
               personnel.map((person) => {
                 return (
@@ -149,7 +146,6 @@ const AllocationChart = ({ allocations }) => {
           </div>
         </div>
 
-        {/* Legend */}
         <div className="border-t border-gray-200 dark:border-slate-700 pt-4">
           <p className="text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Project Legend:</p>
           <div className="flex flex-wrap gap-2">

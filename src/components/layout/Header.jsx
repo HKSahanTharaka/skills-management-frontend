@@ -10,7 +10,6 @@ const Header = () => {
   return (
     <header className="bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 sticky top-0 z-40 shadow-lg backdrop-blur-sm transition-all duration-300 lg:ml-64">
       <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
-        {/* Left side */}
         <div className="flex items-center gap-4">
           <button
             onClick={toggleSidebar}
@@ -33,9 +32,7 @@ const Header = () => {
           </Link>
         </div>
 
-        {/* Right side */}
         <div className="flex items-center gap-3">
-          {/* Search - Desktop only */}
           <div className="hidden md:flex items-center bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20 hover:bg-white/15 transition-all duration-200 group">
             <Search className="h-4 w-4 text-white/60 group-hover:text-white/80 transition-colors" />
             <input
@@ -45,7 +42,6 @@ const Header = () => {
             />
           </div>
 
-          {/* Theme Toggle */}
           <ThemeToggle />
         </div>
       </div>

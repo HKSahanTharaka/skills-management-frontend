@@ -9,14 +9,11 @@ import { useProjects } from '../hooks/useProjects';
 export const Dashboard = () => {
   const navigate = useNavigate();
 
-  // Fetch data - fetch all for accurate counts
   const { data: personnelData, isLoading: isLoadingPersonnel } = usePersonnel({ limit: 100 });
   const { data: skillsData, isLoading: isLoadingSkills } = useSkills({ limit: 100 });
   const { data: projectsData, isLoading: isLoadingProjects } = useProjects({ limit: 100 });
 
   const isLoading = isLoadingPersonnel || isLoadingSkills || isLoadingProjects;
-
-  // Calculate stats
   const totalPersonnel = personnelData?.pagination?.total || personnelData?.data?.length || 0;
   const totalSkills = skillsData?.pagination?.total || skillsData?.data?.length || 0;
   const totalProjects = projectsData?.pagination?.total || projectsData?.data?.length || 0;
@@ -61,13 +58,11 @@ export const Dashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Dashboard</h1>
         <p className="mt-2 text-gray-600 dark:text-slate-400">Welcome back! Here's an overview of your system.</p>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => {
           const Icon = stat.icon;
@@ -87,7 +82,6 @@ export const Dashboard = () => {
         })}
       </div>
 
-      {/* Quick Actions */}
       <Card header="Quick Actions">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <button
@@ -119,7 +113,6 @@ export const Dashboard = () => {
         </div>
       </Card>
 
-      {/* System Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card header="Projects Overview">
           <div className="space-y-3">

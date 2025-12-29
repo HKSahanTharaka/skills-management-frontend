@@ -78,7 +78,6 @@ const SkillsPage = () => {
       setShowForm(false);
       setEditingSkill(null);
     } catch (error) {
-      // Error is handled by the mutation
     }
   };
 
@@ -160,7 +159,6 @@ const SkillsPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Skills Management</h1>
@@ -173,7 +171,6 @@ const SkillsPage = () => {
         )}
       </div>
 
-      {/* Filters */}
       <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-2">
@@ -206,7 +203,6 @@ const SkillsPage = () => {
         </div>
       </div>
 
-      {/* Content */}
       {data?.data?.length === 0 && !isLoading ? (
         <EmptyState
           icon={Plus}
@@ -235,7 +231,6 @@ const SkillsPage = () => {
         </>
       )}
 
-      {/* Create/Edit Modal */}
       <Modal
         isOpen={showForm}
         onClose={() => {
@@ -256,7 +251,6 @@ const SkillsPage = () => {
         />
       </Modal>
 
-      {/* Delete Confirmation Modal */}
       <Modal
         isOpen={!!showDeleteConfirm}
         onClose={() => setShowDeleteConfirm(null)}

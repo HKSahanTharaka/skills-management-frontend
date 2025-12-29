@@ -58,7 +58,6 @@ const ProjectsPage = () => {
 
   const handleEdit = useCallback(async (project) => {
     try {
-      // Fetch full project details including required skills
       const fullProject = await projectService.getById(project.id);
       setEditingProject(fullProject.data);
       setShowForm(true);
@@ -76,7 +75,6 @@ const ProjectsPage = () => {
   const handleFormSubmit = async (formData, requiredSkills = []) => {
     try {
       if (editingProject) {
-        // When updating, include required_skills in the payload
         await updateMutation.mutateAsync({
           id: editingProject.id,
           data: {
@@ -86,7 +84,6 @@ const ProjectsPage = () => {
         });
         toast.success(`Project updated successfully with ${requiredSkills.length} required skill(s)!`);
       } else {
-        // When creating, include required_skills in the initial payload
         await createMutation.mutateAsync({
           ...formData,
           required_skills: requiredSkills,
@@ -106,7 +103,6 @@ const ProjectsPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Projects Management</h1>
@@ -117,7 +113,6 @@ const ProjectsPage = () => {
         </Button>
       </div>
 
-      {/* Filters */}
       <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="md:col-span-2">
@@ -145,7 +140,6 @@ const ProjectsPage = () => {
         </div>
       </div>
 
-      {/* Stats */}
       {!filters.status && !filters.search && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {PROJECT_STATUSES.map((status) => {
@@ -160,7 +154,6 @@ const ProjectsPage = () => {
         </div>
       )}
 
-      {/* Projects Grid */}
       {data?.data?.length === 0 && !isLoading ? (
         <EmptyState
           icon={Plus}
@@ -193,7 +186,6 @@ const ProjectsPage = () => {
         </>
       )}
 
-      {/* Create/Edit Modal */}
       <Modal
         isOpen={showForm}
         onClose={() => {
@@ -214,7 +206,6 @@ const ProjectsPage = () => {
         />
       </Modal>
 
-      {/* Delete Confirmation Modal */}
       <Modal
         isOpen={!!showDeleteConfirm}
         onClose={() => setShowDeleteConfirm(null)}

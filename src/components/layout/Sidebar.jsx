@@ -63,7 +63,6 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Mobile overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden transition-opacity duration-300"
@@ -71,7 +70,6 @@ const Sidebar = () => {
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`
           fixed inset-y-0 left-0 z-50
@@ -83,8 +81,7 @@ const Sidebar = () => {
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           flex flex-col shadow-xl
         `}
-      >
-        {/* Mobile close button */}
+        >
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-slate-700 lg:hidden bg-white dark:bg-slate-900">
           <span className="text-lg font-semibold text-gray-900 dark:text-slate-100">Menu</span>
           <button
@@ -95,7 +92,6 @@ const Sidebar = () => {
           </button>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           <div className="mb-2">
             <p className="text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider px-4 mb-2">
@@ -144,7 +140,6 @@ const Sidebar = () => {
           })}
         </nav>
 
-        {/* User Profile Footer */}
         <div className="p-4 border-t border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900">
           <div className="relative">
             <button
@@ -161,7 +156,6 @@ const Sidebar = () => {
 
             </button>
 
-            {/* Dropdown menu */}
             {showUserMenu && (
               <>
                 <div

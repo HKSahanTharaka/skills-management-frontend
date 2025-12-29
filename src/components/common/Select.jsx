@@ -66,7 +66,6 @@ const Select = forwardRef(
             />
           </button>
 
-          {/* Dropdown */}
           {isOpen && !disabled && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />

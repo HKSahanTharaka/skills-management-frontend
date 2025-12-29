@@ -65,7 +65,6 @@ const Register = () => {
     <div className="light">
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 px-4 py-12">
         <div className="max-w-md w-full space-y-8">
-          {/* Header */}
           <div className="text-center">
             <div className="mx-auto h-20 w-20 rounded-2xl flex items-center justify-center mb-4">
               <img
@@ -108,7 +107,6 @@ const Register = () => {
                 {...register('password')}
               />
 
-              {/* Password Strength Indicator */}
               {password && password.length > 0 && (
                 <div className="space-y-2">
                   <div className="flex gap-1">

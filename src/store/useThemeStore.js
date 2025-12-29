@@ -8,7 +8,6 @@ const useThemeStore = create(
 
             setTheme: (theme) => {
                 set({ theme });
-                // Apply theme class to document root
                 if (theme === 'dark') {
                     document.documentElement.classList.add('dark');
                 } else {
@@ -19,7 +18,6 @@ const useThemeStore = create(
             toggleTheme: () => {
                 set((state) => {
                     const newTheme = state.theme === 'light' ? 'dark' : 'light';
-                    // Apply theme class to document root
                     if (newTheme === 'dark') {
                         document.documentElement.classList.add('dark');
                     } else {
@@ -32,7 +30,6 @@ const useThemeStore = create(
         {
             name: 'theme-storage',
             onRehydrateStorage: () => (state) => {
-                // Apply theme class on initial load
                 if (state?.theme === 'dark') {
                     document.documentElement.classList.add('dark');
                 } else {

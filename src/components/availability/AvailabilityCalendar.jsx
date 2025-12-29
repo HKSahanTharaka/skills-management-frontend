@@ -94,7 +94,6 @@ const AvailabilityCalendar = ({ personnelId, availabilityData, onAddPeriod, onEd
   return (
     <Card>
       <div className="space-y-6">
-        {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Button variant="ghost" onClick={handlePrevMonth} size="sm">
@@ -112,9 +111,7 @@ const AvailabilityCalendar = ({ personnelId, availabilityData, onAddPeriod, onEd
           </Button>
         </div>
 
-        {/* Calendar Grid */}
         <div className="border border-gray-200 dark:border-slate-700 rounded-lg overflow-hidden">
-          {/* Week Days Header */}
           <div className="grid grid-cols-7 bg-gray-50 dark:bg-slate-800">
             {weekDays.map((day) => (
               <div key={day} className="p-2 text-center text-sm font-medium text-gray-700 dark:text-slate-300 border-r border-gray-200 dark:border-slate-700 last:border-r-0">
@@ -123,7 +120,6 @@ const AvailabilityCalendar = ({ personnelId, availabilityData, onAddPeriod, onEd
             ))}
           </div>
 
-          {/* Calendar Days */}
           <div className="grid grid-cols-7">
             {Array.from({ length: monthStart.getDay() }).map((_, index) => (
               <div key={`empty-${index}`} className="p-2 border-r border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800" />
@@ -157,7 +153,6 @@ const AvailabilityCalendar = ({ personnelId, availabilityData, onAddPeriod, onEd
           </div>
         </div>
 
-        {/* Availability Periods List */}
         <div>
           <h4 className="font-medium text-gray-900 dark:text-slate-100 mb-3">Availability Periods</h4>
           {availabilityData && availabilityData.length > 0 ? (
@@ -202,7 +197,6 @@ const AvailabilityCalendar = ({ personnelId, availabilityData, onAddPeriod, onEd
           )}
         </div>
 
-        {/* Legend */}
         <div className="flex items-center gap-4 text-sm">
           <span className="text-gray-600 dark:text-slate-400">Legend:</span>
           <div className="flex items-center gap-2">
@@ -224,7 +218,6 @@ const AvailabilityCalendar = ({ personnelId, availabilityData, onAddPeriod, onEd
         </div>
       </div>
 
-      {/* Add Modal */}
       <Modal
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
@@ -264,7 +257,6 @@ const AvailabilityCalendar = ({ personnelId, availabilityData, onAddPeriod, onEd
         </div>
       </Modal>
 
-      {/* Edit Modal */}
       <Modal
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}

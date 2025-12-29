@@ -105,7 +105,6 @@ const ProjectForm = ({ initialData, onSubmit, onCancel, isLoading }) => {
         />
       </div>
 
-      {/* Show status field only when editing */}
       {initialData ? (
         <Controller
           name="status"

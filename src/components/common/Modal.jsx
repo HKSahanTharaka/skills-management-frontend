@@ -59,7 +59,6 @@ const Modal = ({
           max-h-[90vh] flex flex-col
         `}
       >
-        {/* Header */}
         {(title || showCloseButton) && (
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-slate-700">
             {title && <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">{title}</h2>}
@@ -74,10 +73,8 @@ const Modal = ({
           </div>
         )}
 
-        {/* Body */}
         <div className="px-6 py-4 overflow-y-auto flex-1">{children}</div>
 
-        {/* Footer */}
         {footer && (
           <div className="px-6 py-4 border-t border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 rounded-b-xl">
             {footer}
