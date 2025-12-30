@@ -35,6 +35,7 @@ export const usePermissions = () => {
 
     canViewAllAvailability: isManagerOrAdmin,
     canManageAvailability: isManagerOrAdmin,
+    canDeleteAvailability: isAdmin,
 
     canViewAllAllocations: isManagerOrAdmin,
     canCreateAllocation: isManagerOrAdmin,

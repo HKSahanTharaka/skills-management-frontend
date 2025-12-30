@@ -9,8 +9,10 @@ const Modal = ({
   children,
   footer,
   size = 'md',
+  maxWidth,
   closeOnBackdrop = true,
   showCloseButton = true,
+  showHeader = true,
 }) => {
   useEffect(() => {
     const handleEscape = (e) => {
@@ -53,13 +55,13 @@ const Modal = ({
     >
       <div
         className={`
-          relative w-full ${sizes[size]} 
+          relative w-full ${maxWidth || sizes[size]} 
           bg-white dark:bg-slate-800 rounded-xl shadow-2xl
           animate-in zoom-in-95 slide-in-from-bottom-4 duration-200
           max-h-[90vh] flex flex-col
         `}
       >
-        {(title || showCloseButton) && (
+        {showHeader && (title || showCloseButton) && (
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-slate-700">
             {title && <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">{title}</h2>}
             {showCloseButton && (
@@ -73,7 +75,7 @@ const Modal = ({
           </div>
         )}
 
-        <div className="px-6 py-4 overflow-y-auto flex-1">{children}</div>
+        <div className={`${showHeader ? 'px-6 py-4' : ''} overflow-y-auto flex-1`}>{children}</div>
 
         {footer && (
           <div className="px-6 py-4 border-t border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 rounded-b-xl">

@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Search, Filter, SlidersHorizontal, Users, Calendar, Briefcase } from 'lucide-react';
+import { Search, Filter, SlidersHorizontal, Users, Calendar, Briefcase, Info, HelpCircle, UserX } from 'lucide-react';
 import { useProjects } from '../../hooks/useProjects';
-import { useMatchPersonnel, useAllocateToProject, useProjectAllocations } from '../../hooks/useMatching';
+import { useMatchPersonnel, useAllocateToProject, useProjectAllocations, useDeleteAllocation } from '../../hooks/useMatching';
+import { usePermissions } from '../../hooks/usePermissions';
 import { formatDisplayDate } from '../../utils/helpers';
 import Select from '../common/Select';
 import Input from '../common/Input';
@@ -11,10 +12,15 @@ import Badge from '../common/Badge';
 import EmptyState from '../common/EmptyState';
 import Loading from '../common/Loading';
 import MatchResultCard from './MatchResultCard';
+import HelpModal from '../common/HelpModal';
+import Modal from '../common/Modal';
 
 const MatchingInterface = () => {
   const [selectedProject, setSelectedProject] = useState('');
   const [shouldFetchMatches, setShouldFetchMatches] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
+  const [showUnassignConfirm, setShowUnassignConfirm] = useState(false);
+  const [allocationToUnassign, setAllocationToUnassign] = useState(null);
   const [filters, setFilters] = useState({
     minMatchScore: 0,
     sortBy: 'match_score',
@@ -33,8 +39,8 @@ const MatchingInterface = () => {
     enabled: shouldFetchMatches && !!selectedProject,
   });
 
-  const { data: allocations, isLoading: isLoadingAllocations } = useProjectAllocations(selectedProject, {
-    enabled: shouldFetchMatches && !!selectedProject,
+  const { data: allocations, isLoading: isLoadingAllocations, refetch: refetchAllocations } = useProjectAllocations(selectedProject, {
+    enabled: !!selectedProject,
   });
   const assignedPersonnel = allocations || [];
 
@@ -64,10 +70,12 @@ const MatchingInterface = () => {
   })) || [];
 
   const allocateMutation = useAllocateToProject();
+  const deleteMutation = useDeleteAllocation();
+  const { isAdmin } = usePermissions();
 
   const handleProjectChange = (projectId) => {
     setSelectedProject(projectId);
-    setShouldFetchMatches(false); // Reset when project changes
+    setShouldFetchMatches(false);
   };
 
   const handleFindMatches = () => {
@@ -87,6 +95,24 @@ const MatchingInterface = () => {
         endDate: selectedProjectData?.end_date,
       });
     } catch (error) {
+    }
+  };
+
+  const handleUnassign = async (allocationId, personnelName) => {
+    setAllocationToUnassign({ id: allocationId, name: personnelName });
+    setShowUnassignConfirm(true);
+  };
+
+  const confirmUnassign = async () => {
+    if (allocationToUnassign) {
+      try {
+        await deleteMutation.mutateAsync(allocationToUnassign.id);
+        setShowUnassignConfirm(false);
+        setAllocationToUnassign(null);
+        
+        refetchAllocations();
+      } catch (error) {
+      }
     }
   };
 
@@ -113,11 +139,45 @@ const MatchingInterface = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Project Matching</h1>
-        <p className="mt-2 text-gray-600 dark:text-slate-400">
-          Find the best personnel matches for your projects based on skills and availability
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Project Matching</h1>
+          <p className="mt-2 text-gray-600 dark:text-slate-400">
+            Find the best personnel matches for your projects based on skills and availability
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          onClick={() => setShowHelp(true)}
+          leftIcon={<HelpCircle className="h-4 w-4" />}
+        >
+          Help
+        </Button>
+      </div>
+
+      <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-lg p-5">
+        <div className="flex items-start gap-3">
+          <Info className="h-5 w-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <h4 className="text-sm font-semibold text-green-900 dark:text-green-100 mb-2">
+               How Matching Works
+            </h4>
+            <div className="grid md:grid-cols-3 gap-4 text-sm text-green-800 dark:text-green-200">
+              <div>
+                <strong>1. Skills Analysis</strong>
+                <p className="text-xs mt-1 text-green-700 dark:text-green-300">Compares personnel skills against project requirements and proficiency levels</p>
+              </div>
+              <div>
+                <strong>2. Match Score</strong>
+                <p className="text-xs mt-1 text-green-700 dark:text-green-300">Calculates percentage based on matching skills, experience, and availability</p>
+              </div>
+              <div>
+                <strong>3. Smart Ranking</strong>
+                <p className="text-xs mt-1 text-green-700 dark:text-green-300">Sorts by match score, then experience level, then availability</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <Card>
@@ -274,13 +334,27 @@ const MatchingInterface = () => {
                     </span>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-xl font-bold text-primary-600 dark:text-primary-400">
-                    {allocation.allocation_percentage}%
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <div className="text-xl font-bold text-primary-600 dark:text-primary-400">
+                      {allocation.allocation_percentage}%
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-slate-400">
+                      Allocated
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-500 dark:text-slate-400">
-                    Allocated
-                  </div>
+                  {isAdmin && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleUnassign(allocation.id, allocation.personnel_name)}
+                      isLoading={deleteMutation.isPending}
+                      leftIcon={<UserX className="h-4 w-4" />}
+                      className="text-red-600 hover:text-red-700 hover:border-red-300 dark:text-red-400 dark:hover:text-red-300"
+                    >
+                      Unassign
+                    </Button>
+                  )}
                 </div>
               </div>
             ))}
@@ -291,11 +365,47 @@ const MatchingInterface = () => {
       {isLoadingMatches ? (
         <Loading />
       ) : !selectedProject ? (
-        <EmptyState
-          icon={Search}
-          title="Select a project to get started"
-          description="Choose a project from the dropdown above to find matching personnel"
-        />
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 p-12">
+          <div className="text-center">
+            <Search className="h-20 w-20 text-gray-400 dark:text-slate-600 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-slate-100 mb-2">
+              Select a Project to Begin
+            </h3>
+            <p className="text-gray-600 dark:text-slate-400 mb-6 max-w-md mx-auto">
+              Choose a project from the dropdown above, then click "Find Matches" to discover the best personnel for your team.
+            </p>
+            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 max-w-lg mx-auto text-left">
+              <p className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-2"> Matching Tips:</p>
+              <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+                <li>• 90%+ match score = Excellent candidate (all requirements met)</li>
+                <li>• 70-89% = Good match (most requirements met)</li>
+                <li>• 50-69% = Fair match (partial requirements met)</li>
+                <li>• Use filters to narrow results by experience or availability</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      ) : !shouldFetchMatches ? (
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 p-12">
+          <div className="text-center">
+            <Search className="h-20 w-20 text-primary-400 dark:text-primary-600 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-slate-100 mb-2">
+              Ready to Find Matches
+            </h3>
+            <p className="text-gray-600 dark:text-slate-400 mb-6 max-w-md mx-auto">
+              Click the "Find Matches" button above to analyze personnel and find the best candidates for this project.
+            </p>
+            <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 max-w-md mx-auto text-left">
+              <p className="text-sm font-semibold text-green-900 dark:text-green-100 mb-2"> What happens next:</p>
+              <ul className="text-sm text-green-800 dark:text-green-200 space-y-1">
+                <li>• System analyzes all personnel skills and experience</li>
+                <li>• Matches are ranked by compatibility score</li>
+                <li>• You'll see matching and missing skills for each candidate</li>
+                <li>• You can assign suitable personnel with one click</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       ) : filteredMatches && filteredMatches.length > 0 ? (
         <div className="space-y-4">
           {filteredMatches.map((match) => (
@@ -308,12 +418,81 @@ const MatchingInterface = () => {
           ))}
         </div>
       ) : (
-        <EmptyState
-          icon={Filter}
-          title="No matches found"
-          description="No personnel match the requirements for this project"
-        />
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700 p-12">
+          <div className="text-center">
+            <Filter className="h-20 w-20 text-gray-400 dark:text-slate-600 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-slate-100 mb-2">
+              No Matching Personnel Found
+            </h3>
+            <p className="text-gray-600 dark:text-slate-400 mb-6">
+              No personnel currently meet the requirements for this project.
+            </p>
+            <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-4 max-w-md mx-auto text-left">
+              <p className="text-sm font-semibold text-amber-900 dark:text-amber-100 mb-2"> What you can do:</p>
+              <ul className="text-sm text-amber-800 dark:text-amber-200 space-y-1">
+                <li>• Lower the minimum match score filter if applied</li>
+                <li>• Check if search or experience filters are too restrictive</li>
+                <li>• Review and adjust project skill requirements</li>
+                <li>• Add required skills to existing personnel profiles</li>
+                <li>• Consider hiring personnel with needed skills</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       )}
+
+      <HelpModal 
+        isOpen={showHelp} 
+        onClose={() => setShowHelp(false)} 
+        topic="matching"
+      />
+
+      <Modal
+        isOpen={showUnassignConfirm}
+        onClose={() => {
+          setShowUnassignConfirm(false);
+          setAllocationToUnassign(null);
+        }}
+        title="Confirm Unassign"
+        size="sm"
+        footer={
+          <div className="flex gap-3 w-full">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowUnassignConfirm(false);
+                setAllocationToUnassign(null);
+              }}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              onClick={confirmUnassign}
+              isLoading={deleteMutation.isPending}
+              className="flex-1"
+            >
+              Unassign
+            </Button>
+          </div>
+        }
+      >
+        <div className="space-y-3">
+          <p className="text-gray-600 dark:text-slate-400">
+            Are you sure you want to unassign{' '}
+            <span className="font-semibold text-gray-900 dark:text-slate-100">
+              {allocationToUnassign?.name}
+            </span>{' '}
+            from this project?
+          </p>
+          <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-3 border border-amber-200 dark:border-amber-800">
+            <p className="text-sm text-amber-800 dark:text-amber-200">
+               This will remove their allocation and free up their capacity. This action cannot be undone.
+            </p>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

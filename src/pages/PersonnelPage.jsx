@@ -1,5 +1,5 @@
-import { useState, useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Plus, Search, Filter, MoreVertical, Edit, Trash2, Eye } from 'lucide-react';
 import { usePersonnel, useDeletePersonnel } from '../hooks/usePersonnel';
 import { EXPERIENCE_LEVELS } from '../utils/constants';
@@ -21,16 +21,24 @@ import { useCreatePersonnel, useUpdatePersonnel } from '../hooks/usePersonnel';
 
 const PersonnelPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const permissions = usePermissions();
   const [showForm, setShowForm] = useState(false);
   const [editingPersonnel, setEditingPersonnel] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
   const [filters, setFilters] = useState({
-    search: '',
+    search: searchParams.get('search') || '',
     experience_level: '',
     page: 1,
     limit: 10,
   });
+
+  useEffect(() => {
+    const searchParam = searchParams.get('search');
+    if (searchParam && searchParam !== filters.search) {
+      setFilters((prev) => ({ ...prev, search: searchParam, page: 1 }));
+    }
+  }, [searchParams]);
 
   const { data, isLoading } = usePersonnel(filters);
   const createMutation = useCreatePersonnel();

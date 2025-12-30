@@ -1,5 +1,5 @@
-import { useState, useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Plus, Search } from 'lucide-react';
 import { useProjects, useCreateProject, useUpdateProject, useDeleteProject } from '../hooks/useProjects';
 import { PROJECT_STATUSES } from '../utils/constants';
@@ -18,15 +18,23 @@ import ProjectForm from '../components/projects/ProjectForm';
 
 const ProjectsPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [showForm, setShowForm] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
   const [filters, setFilters] = useState({
-    search: '',
+    search: searchParams.get('search') || '',
     status: '',
     page: 1,
     limit: 12,
   });
+
+  useEffect(() => {
+    const searchParam = searchParams.get('search');
+    if (searchParam && searchParam !== filters.search) {
+      setFilters((prev) => ({ ...prev, search: searchParam, page: 1 }));
+    }
+  }, [searchParams]);
 
   const { data, isLoading } = useProjects(filters);
   const createMutation = useCreateProject();
