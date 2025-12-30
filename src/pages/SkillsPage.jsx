@@ -1,4 +1,5 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Plus, Search, Edit, Trash2 } from 'lucide-react';
 import { useSkills, useCreateSkill, useUpdateSkill, useDeleteSkill } from '../hooks/useSkills';
 import { SKILL_CATEGORIES } from '../utils/constants';
@@ -15,16 +16,24 @@ import Loading from '../components/common/Loading';
 import SkillForm from '../components/skills/SkillForm';
 
 const SkillsPage = () => {
+  const [searchParams] = useSearchParams();
   const permissions = usePermissions();
   const [showForm, setShowForm] = useState(false);
   const [editingSkill, setEditingSkill] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
   const [filters, setFilters] = useState({
-    search: '',
+    search: searchParams.get('search') || '',
     category: '',
     page: 1,
     limit: 10,
   });
+
+  useEffect(() => {
+    const searchParam = searchParams.get('search');
+    if (searchParam && searchParam !== filters.search) {
+      setFilters((prev) => ({ ...prev, search: searchParam, page: 1 }));
+    }
+  }, [searchParams]);
 
   const { data, isLoading } = useSkills(filters);
   const createMutation = useCreateSkill();

@@ -149,7 +149,7 @@ const Sidebar = () => {
               <div className="p-2 rounded-lg transition-all duration-200 bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 group-hover:bg-primary-100 dark:group-hover:bg-primary-900/50 group-hover:text-primary-600 dark:group-hover:text-primary-400">
                 <User className="h-5 w-5" />
               </div>
-              <div className="flex-1 text-left">
+              <div className="flex-1 text-left min-w-0">
                 <p className="text-sm font-medium text-gray-900 dark:text-slate-100 truncate">{user?.email}</p>
                 <RoleBadge role={user?.role} />
               </div>

@@ -1,4 +1,4 @@
-import { Users, TrendingUp, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Users, TrendingUp, AlertTriangle, CheckCircle, Info } from 'lucide-react';
 import Card from '../common/Card';
 import Badge from '../common/Badge';
 
@@ -6,7 +6,15 @@ const UtilizationDashboard = ({ utilizationData }) => {
   if (!utilizationData || utilizationData.length === 0) {
     return (
       <Card>
-        <p className="text-center text-gray-500 py-8">No utilization data available</p>
+        <div className="text-center py-12">
+          <TrendingUp className="h-16 w-16 text-gray-400 dark:text-slate-600 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-2">
+            No Utilization Data Available
+          </h3>
+          <p className="text-gray-600 dark:text-slate-400 mb-4">
+            Start allocating personnel to projects to see utilization statistics here.
+          </p>
+        </div>
       </Card>
     );
   }
@@ -15,6 +23,21 @@ const UtilizationDashboard = ({ utilizationData }) => {
 
   return (
     <div className="space-y-6">
+      <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+        <div className="flex items-start gap-3">
+          <Info className="h-5 w-5 text-purple-600 dark:text-purple-400 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <h4 className="text-sm font-semibold text-purple-900 dark:text-purple-100 mb-1">
+               Understanding Utilization
+            </h4>
+            <p className="text-sm text-purple-800 dark:text-purple-200">
+              Utilization shows how much of each person's capacity is allocated to projects. 
+              <strong> 80-100% is ideal</strong>. Over 100% indicates over-allocation and potential burnout risk.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <div className="flex items-center gap-3">

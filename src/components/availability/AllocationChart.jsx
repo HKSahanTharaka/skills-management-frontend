@@ -1,11 +1,28 @@
-import { format, eachMonthOfInterval, addMonths, startOfMonth, endOfMonth } from 'date-fns';
+import { useState } from 'react';
+import { format, eachMonthOfInterval, addMonths, subMonths, startOfMonth, endOfMonth } from 'date-fns';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Card from '../common/Card';
 import Badge from '../common/Badge';
+import Button from '../common/Button';
 
 const AllocationChart = ({ allocations }) => {
-  const startDate = startOfMonth(new Date());
+  const [currentStartDate, setCurrentStartDate] = useState(startOfMonth(new Date()));
+  
+  const startDate = currentStartDate;
   const endDate = addMonths(startDate, 3);
   const months = eachMonthOfInterval({ start: startDate, end: endDate });
+
+  const handlePrevMonth = () => {
+    setCurrentStartDate(subMonths(currentStartDate, 1));
+  };
+
+  const handleNextMonth = () => {
+    setCurrentStartDate(addMonths(currentStartDate, 1));
+  };
+
+  const handleToday = () => {
+    setCurrentStartDate(startOfMonth(new Date()));
+  };
 
   const personnelMap = new Map();
   allocations?.forEach((allocation) => {
@@ -55,15 +72,55 @@ const AllocationChart = ({ allocations }) => {
     return { total, projects: projectAllocations };
   };
 
-  const projectColors = new Map();
+  const projectColorsMap = new Map();
+  const projectNamesMap = new Map();
   let colorIndex = 0;
 
   return (
     <Card>
       <div className="space-y-6">
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+          <div className="flex items-start gap-3">
+            <div className="flex-1">
+              <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
+                 How to Read This Chart
+              </h4>
+              <p className="text-sm text-blue-800 dark:text-blue-200">
+                Each row shows a person's allocations across months. Numbers indicate allocation percentage. 
+                <strong className="text-blue-900 dark:text-blue-100"> Red background = Over-allocated (exceeds 100%)</strong>. 
+                Hover over colored boxes to see project details.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">Project Allocations Timeline</h3>
-          <Badge variant="secondary">{personnel.length} Personnel</Badge>
+          <div className="flex items-center gap-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">Project Allocations Timeline</h3>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" onClick={handlePrevMonth} size="sm" title="Previous month">
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="ghost" 
+                onClick={handleToday} 
+                size="sm"
+                className="text-xs font-medium min-w-[80px]"
+              >
+                Today
+              </Button>
+              <Button variant="ghost" onClick={handleNextMonth} size="sm" title="Next month">
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-gray-600 dark:text-slate-400">
+              {format(startDate, 'MMM yyyy')} - {format(endDate, 'MMM yyyy')}
+            </span>
+            <Badge variant="secondary">{personnel.length} Personnel</Badge>
+            <Badge variant="primary">{projectColorsMap.size} Projects</Badge>
+          </div>
         </div>
 
         <div className="overflow-x-auto">
@@ -103,13 +160,14 @@ const AllocationChart = ({ allocations }) => {
                           {projects.length > 0 ? (
                             <div className="space-y-1">
                               {projects.map((project) => {
-                                if (!projectColors.has(project.project_id)) {
-                                  projectColors.set(
+                                if (!projectColorsMap.has(project.project_id)) {
+                                  projectColorsMap.set(
                                     project.project_id,
                                     getColorForProject(project.project_id, colorIndex++)
                                   );
+                                  projectNamesMap.set(project.project_id, project.project_name);
                                 }
-                                const color = projectColors.get(project.project_id);
+                                const color = projectColorsMap.get(project.project_id);
 
                                 return (
                                   <div key={project.id} className="relative group">
@@ -146,23 +204,22 @@ const AllocationChart = ({ allocations }) => {
           </div>
         </div>
 
-        <div className="border-t border-gray-200 dark:border-slate-700 pt-4">
-          <p className="text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Project Legend:</p>
-          <div className="flex flex-wrap gap-2">
-            {Array.from(projectColors.entries()).map(([projectId, color]) => {
-              const project = allocations?.find((a) => a.project_id === projectId);
-              return (
-                <div key={projectId} className="flex items-center gap-2">
-                  <div className={`w-4 h-4 rounded ${color}`} />
-                  <span className="text-sm text-gray-700 dark:text-slate-300">{project?.project_name || 'Unknown'}</span>
-                </div>
-              );
-            })}
+        {projectColorsMap.size > 0 && (
+          <div className="bg-gray-50 dark:bg-slate-800 rounded-lg p-4 border border-gray-200 dark:border-slate-700">
+            <p className="text-sm font-semibold text-gray-900 dark:text-slate-100 mb-3"> Project Colors:</p>
+            <div className="flex flex-wrap gap-3">
+              {Array.from(projectColorsMap.entries()).map(([projectId, color]) => {
+                const projectName = projectNamesMap.get(projectId) || 'Unknown';
+                return (
+                  <div key={projectId} className="flex items-center gap-2 bg-white dark:bg-slate-900 px-3 py-2 rounded-lg border border-gray-200 dark:border-slate-700">
+                    <div className={`w-4 h-4 rounded ${color}`} />
+                    <span className="text-sm font-medium text-gray-700 dark:text-slate-300">{projectName}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <div className="mt-3 text-sm text-gray-600 dark:text-slate-400">
-            <span className="font-medium">Note:</span> Red background indicates over-allocation (&gt;100%)
-          </div>
-        </div>
+        )}
       </div>
     </Card>
   );

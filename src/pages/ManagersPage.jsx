@@ -19,6 +19,8 @@ import RoleBadge from '../components/common/RoleBadge';
 const ManagersPage = () => {
   const queryClient = useQueryClient();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
+  const [showApproveConfirm, setShowApproveConfirm] = useState(null);
+  const [showRejectConfirm, setShowRejectConfirm] = useState(null);
   const [filters, setFilters] = useState({
     approval_status: '',
     search: '',
@@ -72,16 +74,16 @@ const ManagersPage = () => {
     },
   });
 
-  const handleApprove = (id) => {
-    if (window.confirm('Are you sure you want to approve this manager?')) {
-      approveMutation.mutate(id);
-    }
+  const handleApprove = () => {
+    if (!showApproveConfirm) return;
+    approveMutation.mutate(showApproveConfirm.id);
+    setShowApproveConfirm(null);
   };
 
-  const handleReject = (id) => {
-    if (window.confirm('Are you sure you want to reject this manager?')) {
-      rejectMutation.mutate(id);
-    }
+  const handleReject = () => {
+    if (!showRejectConfirm) return;
+    rejectMutation.mutate(showRejectConfirm.id);
+    setShowRejectConfirm(null);
   };
 
   const handleDelete = () => {
@@ -153,7 +155,7 @@ const ManagersPage = () => {
               <Button
                 size="sm"
                 variant="success"
-                onClick={() => handleApprove(row.id)}
+                onClick={() => setShowApproveConfirm(row)}
                 icon={CheckCircle}
                 disabled={approveMutation.isPending}
               >
@@ -162,7 +164,7 @@ const ManagersPage = () => {
               <Button
                 size="sm"
                 variant="danger"
-                onClick={() => handleReject(row.id)}
+                onClick={() => setShowRejectConfirm(row)}
                 icon={XCircle}
                 disabled={rejectMutation.isPending}
               >
@@ -174,7 +176,7 @@ const ManagersPage = () => {
             <Button
               size="sm"
               variant="danger"
-              onClick={() => handleReject(row.id)}
+              onClick={() => setShowRejectConfirm(row)}
               icon={XCircle}
               disabled={rejectMutation.isPending}
             >
@@ -185,7 +187,7 @@ const ManagersPage = () => {
             <Button
               size="sm"
               variant="success"
-              onClick={() => handleApprove(row.id)}
+              onClick={() => setShowApproveConfirm(row)}
               icon={CheckCircle}
               disabled={approveMutation.isPending}
             >
@@ -319,6 +321,8 @@ const ManagersPage = () => {
                   <Pagination
                     currentPage={data.pagination.page}
                     totalPages={data.pagination.totalPages}
+                    totalItems={data.pagination.total}
+                    itemsPerPage={data.pagination.limit}
                     onPageChange={handlePageChange}
                   />
                 </div>
@@ -357,6 +361,69 @@ const ManagersPage = () => {
           Are you sure you want to delete{' '}
           <span className="font-semibold text-gray-900 dark:text-slate-100">{showDeleteConfirm?.email}</span>? This action cannot be
           undone.
+        </p>
+      </Modal>
+
+      <Modal
+        isOpen={!!showApproveConfirm}
+        onClose={() => setShowApproveConfirm(null)}
+        title="Confirm Approval"
+        size="sm"
+        footer={
+          <div className="flex gap-3 w-full">
+            <Button
+              variant="outline"
+              onClick={() => setShowApproveConfirm(null)}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="success"
+              onClick={handleApprove}
+              isLoading={approveMutation.isPending}
+              className="flex-1"
+            >
+              Approve
+            </Button>
+          </div>
+        }
+      >
+        <p className="text-gray-600 dark:text-slate-400">
+          Are you sure you want to approve{' '}
+          <span className="font-semibold text-gray-900 dark:text-slate-100">{showApproveConfirm?.email}</span> as a manager?
+        </p>
+      </Modal>
+
+      <Modal
+        isOpen={!!showRejectConfirm}
+        onClose={() => setShowRejectConfirm(null)}
+        title={showRejectConfirm?.approval_status === 'approved' ? 'Confirm Revoke' : 'Confirm Rejection'}
+        size="sm"
+        footer={
+          <div className="flex gap-3 w-full">
+            <Button
+              variant="outline"
+              onClick={() => setShowRejectConfirm(null)}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              onClick={handleReject}
+              isLoading={rejectMutation.isPending}
+              className="flex-1"
+            >
+              {showRejectConfirm?.approval_status === 'approved' ? 'Revoke' : 'Reject'}
+            </Button>
+          </div>
+        }
+      >
+        <p className="text-gray-600 dark:text-slate-400">
+          Are you sure you want to {showRejectConfirm?.approval_status === 'approved' ? 'revoke' : 'reject'}{' '}
+          <span className="font-semibold text-gray-900 dark:text-slate-100">{showRejectConfirm?.email}</span>
+          {showRejectConfirm?.approval_status === 'approved' ? "'s manager access" : ''}?
         </p>
       </Modal>
     </div>
