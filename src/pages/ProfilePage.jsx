@@ -15,12 +15,12 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { user: authUser, setUser } = useAuthStore();
   const queryClient = useQueryClient();
-  
+
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     email: '',
     currentPassword: '',
@@ -72,7 +72,7 @@ const ProfilePage = () => {
     e.preventDefault();
 
     const updateData = {};
-    
+
     if (formData.email !== profile?.email) {
       updateData.email = formData.email;
     }
