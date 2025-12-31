@@ -1,29 +1,39 @@
-import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET } from '../utils/constants';
+import api from './api';
 
 export const cloudinaryService = {
   async uploadImage(file) {
-    if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
-      throw new Error('Cloudinary configuration is missing');
+    if (!file) {
+      throw new Error('No file provided for upload');
     }
 
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+    if (!file.type.startsWith('image/')) {
+      throw new Error('Only image files are allowed');
+    }
 
-    const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-      {
-        method: 'POST',
-        body: formData,
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      throw new Error('Image size should be less than 5MB');
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const response = await api.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.data.success && response.data.url) {
+        return response.data.url;
       }
-    );
 
-    if (!response.ok) {
-      throw new Error('Failed to upload image');
+      throw new Error('Invalid response from server');
+    } catch (error) {
+      console.error('Upload error:', error);
+      throw new Error(error.response?.data?.error || 'Failed to upload image');
     }
-
-    const data = await response.json();
-    return data.secure_url;
   },
 };
 

@@ -202,7 +202,7 @@ const HelpModal = ({ isOpen, onClose, topic = 'general' }) => {
           <span>{content.title}</span>
         </div>
       }
-      size="large"
+      size="md"
     >
       <div className="space-y-6 max-h-[60vh] overflow-y-auto pr-2">
         {content.sections.map((section, index) => (
@@ -230,13 +230,6 @@ const HelpModal = ({ isOpen, onClose, topic = 'general' }) => {
             )}
           </div>
         ))}
-
-        <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-          <p className="text-sm text-blue-900 dark:text-blue-100">
-            <strong>Need more help?</strong> Contact your system administrator or refer to the
-            project documentation for additional guidance.
-          </p>
-        </div>
       </div>
       <div className="mt-6 flex justify-end">
         <Button variant="primary" onClick={onClose}>
