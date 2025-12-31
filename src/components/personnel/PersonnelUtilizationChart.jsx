@@ -61,7 +61,7 @@ const PersonnelUtilizationChart = ({ utilizationData, isLoading, dateRange }) =>
               This visualization shows how personnel time is allocated across projects over the next 3 months. 
               Colors indicate utilization levels: <strong>Green (0-60%)</strong> available capacity, 
               <strong>Blue (61-80%)</strong> well-balanced, <strong>Purple (81-100%)</strong> fully allocated, 
-              <strong>Red (>100%)</strong> over-allocated.
+              <strong>Red (&gt;100%)</strong> over-allocated.
             </p>
           </div>
         </div>
