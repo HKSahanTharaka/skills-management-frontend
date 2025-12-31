@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Plus, Search, Filter, MoreVertical, Edit, Trash2, Eye } from 'lucide-react';
+import { Plus, Search, Filter, MoreVertical, Edit, Trash2, Eye, X } from 'lucide-react';
 import { usePersonnel, useDeletePersonnel } from '../hooks/usePersonnel';
 import { EXPERIENCE_LEVELS } from '../utils/constants';
 import { getExperienceLevelColor } from '../utils/helpers';
@@ -17,6 +17,7 @@ import EmptyState from '../components/common/EmptyState';
 import Pagination from '../components/common/Pagination';
 import Loading from '../components/common/Loading';
 import PersonnelForm from '../components/personnel/PersonnelForm';
+import PersonnelAdvancedFilter from '../components/personnel/PersonnelAdvancedFilter';
 import { useCreatePersonnel, useUpdatePersonnel } from '../hooks/usePersonnel';
 
 const PersonnelPage = () => {
@@ -24,11 +25,14 @@ const PersonnelPage = () => {
   const [searchParams] = useSearchParams();
   const permissions = usePermissions();
   const [showForm, setShowForm] = useState(false);
+  const [showAdvancedFilter, setShowAdvancedFilter] = useState(false);
   const [editingPersonnel, setEditingPersonnel] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
     experience_level: '',
+    role_title: '',
+    skill_filters: '',
     page: 1,
     limit: 10,
   });
@@ -108,6 +112,35 @@ const PersonnelPage = () => {
       
     }
   };
+
+  const handleApplyAdvancedFilters = (advancedFilters) => {
+    setFilters((prev) => ({
+      ...prev,
+      ...advancedFilters,
+      page: 1,
+    }));
+    setShowAdvancedFilter(false);
+  };
+
+  const handleClearAdvancedFilters = () => {
+    setFilters({
+      search: '',
+      experience_level: '',
+      role_title: '',
+      skill_filters: '',
+      page: 1,
+      limit: 10,
+    });
+    setShowAdvancedFilter(false);
+  };
+
+  const hasActiveFilters = useMemo(() => {
+    return !!(
+      filters.experience_level ||
+      filters.role_title ||
+      filters.skill_filters
+    );
+  }, [filters]);
 
   const columns = useMemo(() => [
     {
@@ -218,31 +251,80 @@ const PersonnelPage = () => {
       </div>
 
       <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Input
-            placeholder="Search by name or email..."
-            leftIcon={searchIcon}
-            value={filters.search}
-            onChange={handleSearchChange}
-            clearable
-            onClear={handleSearchClear}
-          />
-          <Select
-            placeholder="Filter by experience"
-            options={[
-              { value: '', label: 'All Experience Levels' },
-              ...EXPERIENCE_LEVELS.map((level) => ({
-                value: level,
-                label: level,
-              })),
-            ]}
-            value={filters.experience_level}
-            onChange={(e) => handleFilterChange('experience_level', e.target.value)}
-          />
-          <div className="flex items-center justify-end">
-            <span className="text-sm text-gray-600 dark:text-slate-400">
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Input
+              placeholder="Search by name or email..."
+              leftIcon={searchIcon}
+              value={filters.search}
+              onChange={handleSearchChange}
+              clearable
+              onClear={handleSearchClear}
+            />
+            <Select
+              placeholder="Filter by experience"
+              options={[
+                { value: '', label: 'All Experience Levels' },
+                ...EXPERIENCE_LEVELS.map((level) => ({
+                  value: level,
+                  label: level,
+                })),
+              ]}
+              value={filters.experience_level}
+              onChange={(e) => handleFilterChange('experience_level', e.target.value)}
+            />
+            <div className="flex items-center gap-2">
+              <Button
+                variant={hasActiveFilters ? 'primary' : 'outline'}
+                onClick={() => setShowAdvancedFilter(!showAdvancedFilter)}
+                leftIcon={<Filter className="h-4 w-4" />}
+                className="flex-1"
+              >
+                Advanced Filters
+                {hasActiveFilters && (
+                  <Badge variant="light" className="ml-2">
+                    Active
+                  </Badge>
+                )}
+              </Button>
+              {hasActiveFilters && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleClearAdvancedFilters}
+                  title="Clear all filters"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {showAdvancedFilter && (
+            <div className="border-t border-gray-200 dark:border-slate-700 pt-4">
+              <PersonnelAdvancedFilter
+                onApply={handleApplyAdvancedFilters}
+                onClear={handleClearAdvancedFilters}
+                initialFilters={{
+                  experience_level: filters.experience_level,
+                  role_title: filters.role_title,
+                  skill_filters: filters.skill_filters 
+                    ? JSON.parse(filters.skill_filters) 
+                    : [],
+                }}
+              />
+            </div>
+          )}
+
+          <div className="flex items-center justify-between text-sm text-gray-600 dark:text-slate-400">
+            <span>
               {data?.pagination?.total || 0} personnel found
             </span>
+            {hasActiveFilters && (
+              <span className="text-primary-600 dark:text-primary-400">
+                Filters applied
+              </span>
+            )}
           </div>
         </div>
       </div>
