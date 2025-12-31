@@ -1,29 +1,37 @@
-import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET } from '../utils/constants';
+import { API_BASE_URL, AUTH_TOKEN_KEY } from '../utils/constants';
 
 export const cloudinaryService = {
   async uploadImage(file) {
-    if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
-      throw new Error('Cloudinary configuration is missing');
-    }
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
 
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-
-    const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-      {
-        method: 'POST',
-        body: formData,
+      const token = localStorage.getItem(AUTH_TOKEN_KEY);
+      
+      if (!token) {
+        throw new Error('Authentication token not found. Please login again.');
       }
-    );
 
-    if (!response.ok) {
-      throw new Error('Failed to upload image');
+      const response = await fetch(`${API_BASE_URL}/upload`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        console.error('Upload error:', data);
+        throw new Error(data.error?.message || data.error || 'Failed to upload image');
+      }
+
+      return data.url;
+    } catch (error) {
+      console.error('Upload error:', error);
+      throw error;
     }
-
-    const data = await response.json();
-    return data.secure_url;
   },
 };
 
