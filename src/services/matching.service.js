@@ -45,6 +45,11 @@ export const allocationService = {
     return response.data;
   },
 
+  async getTeamUtilization(months = 3) {
+    const response = await api.get(`/allocations/team/utilization?months=${months}`);
+    return response.data;
+  },
+
   async create(allocationData) {
     const response = await api.post('/allocations', allocationData);
     return response.data;

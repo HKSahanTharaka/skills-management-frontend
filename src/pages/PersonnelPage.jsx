@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Plus, Search, Filter, MoreVertical, Edit, Trash2, Eye, X } from 'lucide-react';
+import { Plus, Search, Filter, MoreVertical, Edit, Trash2, Eye, X, Users, TrendingUp } from 'lucide-react';
 import { usePersonnel, useDeletePersonnel } from '../hooks/usePersonnel';
 import { EXPERIENCE_LEVELS } from '../utils/constants';
 import { getExperienceLevelColor } from '../utils/helpers';
@@ -18,12 +18,15 @@ import Pagination from '../components/common/Pagination';
 import Loading from '../components/common/Loading';
 import PersonnelForm from '../components/personnel/PersonnelForm';
 import PersonnelAdvancedFilter from '../components/personnel/PersonnelAdvancedFilter';
+import PersonnelUtilizationChart from '../components/personnel/PersonnelUtilizationChart';
 import { useCreatePersonnel, useUpdatePersonnel } from '../hooks/usePersonnel';
+import { useTeamUtilization } from '../hooks/useMatching';
 
 const PersonnelPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const permissions = usePermissions();
+  const [activeTab, setActiveTab] = useState('list');
   const [showForm, setShowForm] = useState(false);
   const [showAdvancedFilter, setShowAdvancedFilter] = useState(false);
   const [editingPersonnel, setEditingPersonnel] = useState(null);
@@ -45,6 +48,7 @@ const PersonnelPage = () => {
   }, [searchParams]);
 
   const { data, isLoading } = usePersonnel(filters);
+  const { data: utilizationData, isLoading: isLoadingUtilization } = useTeamUtilization(3);
   const createMutation = useCreatePersonnel();
   const updateMutation = useUpdatePersonnel();
   const deleteMutation = useDeletePersonnel();
@@ -250,6 +254,33 @@ const PersonnelPage = () => {
         )}
       </div>
 
+      <div className="flex gap-2 border-b border-gray-200 dark:border-slate-700">
+        <button
+          onClick={() => setActiveTab('list')}
+          className={`flex items-center gap-2 px-4 py-2 font-medium transition-colors ${
+            activeTab === 'list'
+              ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400'
+              : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200'
+          }`}
+        >
+          <Users className="h-4 w-4" />
+          Personnel List
+        </button>
+        <button
+          onClick={() => setActiveTab('utilization')}
+          className={`flex items-center gap-2 px-4 py-2 font-medium transition-colors ${
+            activeTab === 'utilization'
+              ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400'
+              : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200'
+          }`}
+        >
+          <TrendingUp className="h-4 w-4" />
+          Utilization (3 Months)
+        </button>
+      </div>
+
+      {activeTab === 'list' && (
+        <>
       <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4">
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -355,6 +386,15 @@ const PersonnelPage = () => {
             />
           )}
         </>
+      )}
+        </>
+      )}
+
+      {activeTab === 'utilization' && (
+        <PersonnelUtilizationChart 
+          utilizationData={utilizationData} 
+          isLoading={isLoadingUtilization}
+        />
       )}
 
       <Modal

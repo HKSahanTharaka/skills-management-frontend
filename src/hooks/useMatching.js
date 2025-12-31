@@ -141,6 +141,16 @@ export const usePersonnelUtilization = (personnelId) => {
   });
 };
 
+export const useTeamUtilization = (months = 3) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.ALLOCATIONS, 'team-utilization', months],
+    queryFn: async () => {
+      const result = await allocationService.getTeamUtilization(months);
+      return result.data || [];
+    },
+  });
+};
+
 export const useAllocateToProject = () => {
   const queryClient = useQueryClient();
 
