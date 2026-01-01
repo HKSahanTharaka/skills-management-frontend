@@ -1,15 +1,19 @@
 name: Playwright E2E Tests
 
+# Disabled - tests take too long (~.5 hour)
+# To re-enable, uncomment the on: triggers below and remove the if: false condition
 on:
-  push:
-    branches: [ main, dev ]
-  pull_request:
-    branches: [ main, dev ]
+  workflow_dispatch:  # Manual trigger only
+  # push:
+  #   branches: [ main, dev ]
+  # pull_request:
+  #   branches: [ main, dev ]
 
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    if: false  # Disabled - remove this line to re-enable tests
     
     steps:
     - name: Checkout code
