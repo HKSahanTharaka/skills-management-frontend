@@ -38,3 +38,6 @@ test-results
 # Playwright
 playwright-report
 playwright/.cache
+test-results/
+tests/e2e/screenshots/
+tests/e2e/videos/

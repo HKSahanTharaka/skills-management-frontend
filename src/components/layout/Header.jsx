@@ -24,30 +24,31 @@ const Header = () => {
 
   return (
     <header className="bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 sticky top-0 z-40 shadow-lg backdrop-blur-sm transition-all duration-300 lg:ml-64">
-      <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between h-16 px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
           <button
             onClick={toggleSidebar}
-            className="text-white/80 hover:text-white hover:bg-white/10 p-2 rounded-lg transition-all duration-200 lg:hidden"
+            className="text-white/80 hover:text-white hover:bg-white/10 p-2 rounded-lg transition-all duration-200 lg:hidden flex-shrink-0"
           >
             <Menu className="h-6 w-6" />
           </button>
 
-          <Link to="/dashboard" className="flex items-center group">
-            <div className="h-10 w-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 overflow-hidden">
+          <Link to="/dashboard" className="flex items-center group min-w-0">
+            <div className="h-10 w-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 overflow-hidden flex-shrink-0">
               <img
                 src="/assets/logo.png"
                 alt="Skills Management Logo"
                 className="h-10 w-10 object-contain"
               />
             </div>
-            <span className="ml-3 text-xl font-bold text-white hidden sm:block group-hover:text-white/90 transition-colors">
-              Skills Management
+            <span className="ml-2 sm:ml-3 text-base sm:text-xl font-bold text-white hidden xs:block sm:block group-hover:text-white/90 transition-colors truncate">
+              <span className="hidden sm:inline">Skills Management</span>
+              <span className="sm:hidden">Skills Mgmt</span>
             </span>
           </Link>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
           <button
             onClick={() => setShowSearch(true)}
             className="hidden md:flex items-center bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20 hover:bg-white/15 transition-all duration-200 group cursor-pointer"
@@ -63,7 +64,7 @@ const Header = () => {
 
           <button
             onClick={() => setShowSearch(true)}
-            className="md:hidden text-white/80 hover:text-white hover:bg-white/10 p-2 rounded-lg transition-all duration-200"
+            className="md:hidden text-white/80 hover:text-white hover:bg-white/10 p-2 rounded-lg transition-all duration-200 min-w-[44px] min-h-[44px] flex items-center justify-center"
           >
             <Search className="h-5 w-5" />
           </button>

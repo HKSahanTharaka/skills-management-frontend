@@ -6,6 +6,17 @@ import prettierConfig from 'eslint-config-prettier';
 export default [
   js.configs.recommended,
   {
+    ignores: [
+      'node_modules/**',
+      'dist/**',
+      'build/**',
+      'coverage/**',
+      '.vite/**',
+      'playwright-report/**',
+      'test-results/**',
+    ],
+  },
+  {
     files: ['**/*.{js,jsx}'],
     plugins: {
       react: reactPlugin,
@@ -28,12 +39,24 @@ export default [
         localStorage: 'readonly',
         fetch: 'readonly',
         FormData: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        atob: 'readonly',
+        btoa: 'readonly',
+        URL: 'readonly',
+        URLSearchParams: 'readonly',
+        Blob: 'readonly',
+        File: 'readonly',
+        FileReader: 'readonly',
       },
     },
     rules: {
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      'no-empty': ['warn', { allowEmptyCatch: false }],
     },
   },
   prettierConfig,
