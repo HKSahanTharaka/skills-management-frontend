@@ -113,7 +113,7 @@ const PersonnelPage = () => {
       setShowForm(false);
       setEditingPersonnel(null);
     } catch (error) {
-      
+
     }
   };
 
@@ -242,13 +242,13 @@ const PersonnelPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Personnel Management</h1>
-          <p className="mt-2 text-gray-600 dark:text-slate-400">Manage your team members and their skills</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-slate-100">Personnel Management</h1>
+          <p className="mt-1 sm:mt-2 text-sm sm:text-base text-gray-600 dark:text-slate-400">Manage your team members and their skills</p>
         </div>
         {permissions.canCreatePersonnel && (
-          <Button variant="primary" onClick={handleCreate} leftIcon={<Plus className="h-4 w-4" />}>
+          <Button variant="primary" onClick={handleCreate} leftIcon={<Plus className="h-4 w-4" />} className="w-full sm:w-auto">
             Add Personnel
           </Button>
         )}
@@ -257,22 +257,20 @@ const PersonnelPage = () => {
       <div className="flex gap-2 border-b border-gray-200 dark:border-slate-700">
         <button
           onClick={() => setActiveTab('list')}
-          className={`flex items-center gap-2 px-4 py-2 font-medium transition-colors ${
-            activeTab === 'list'
+          className={`flex items-center gap-2 px-4 py-2 font-medium transition-colors ${activeTab === 'list'
               ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400'
               : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200'
-          }`}
+            }`}
         >
           <Users className="h-4 w-4" />
           Personnel List
         </button>
         <button
           onClick={() => setActiveTab('utilization')}
-          className={`flex items-center gap-2 px-4 py-2 font-medium transition-colors ${
-            activeTab === 'utilization'
+          className={`flex items-center gap-2 px-4 py-2 font-medium transition-colors ${activeTab === 'utilization'
               ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400'
               : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200'
-          }`}
+            }`}
         >
           <TrendingUp className="h-4 w-4" />
           Utilization (3 Months)
@@ -281,118 +279,120 @@ const PersonnelPage = () => {
 
       {activeTab === 'list' && (
         <>
-      <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4">
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Input
-              placeholder="Search by name or email..."
-              leftIcon={searchIcon}
-              value={filters.search}
-              onChange={handleSearchChange}
-              clearable
-              onClear={handleSearchClear}
-            />
-            <Select
-              placeholder="Filter by experience"
-              options={[
-                { value: '', label: 'All Experience Levels' },
-                ...EXPERIENCE_LEVELS.map((level) => ({
-                  value: level,
-                  label: level,
-                })),
-              ]}
-              value={filters.experience_level}
-              onChange={(e) => handleFilterChange('experience_level', e.target.value)}
-            />
-            <div className="flex items-center gap-2">
-              <Button
-                variant={hasActiveFilters ? 'primary' : 'outline'}
-                onClick={() => setShowAdvancedFilter(!showAdvancedFilter)}
-                leftIcon={<Filter className="h-4 w-4" />}
-                className="flex-1"
-              >
-                Advanced Filters
-                {hasActiveFilters && (
-                  <Badge variant="light" className="ml-2">
-                    Active
-                  </Badge>
-                )}
-              </Button>
-              {hasActiveFilters && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleClearAdvancedFilters}
-                  title="Clear all filters"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+          <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-4">
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Input
+                  placeholder="Search by name or email..."
+                  leftIcon={searchIcon}
+                  value={filters.search}
+                  onChange={handleSearchChange}
+                  clearable
+                  onClear={handleSearchClear}
+                />
+                <Select
+                  placeholder="Filter by experience"
+                  options={[
+                    { value: '', label: 'All Experience Levels' },
+                    ...EXPERIENCE_LEVELS.map((level) => ({
+                      value: level,
+                      label: level,
+                    })),
+                  ]}
+                  value={filters.experience_level}
+                  onChange={(e) => handleFilterChange('experience_level', e.target.value)}
+                />
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant={hasActiveFilters ? 'primary' : 'outline'}
+                    onClick={() => setShowAdvancedFilter(!showAdvancedFilter)}
+                    leftIcon={<Filter className="h-4 w-4" />}
+                    className="flex-1"
+                  >
+                    Advanced Filters
+                    {hasActiveFilters && (
+                      <Badge variant="light" className="ml-2">
+                        Active
+                      </Badge>
+                    )}
+                  </Button>
+                  {hasActiveFilters && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleClearAdvancedFilters}
+                      title="Clear all filters"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              {showAdvancedFilter && (
+                <div className="border-t border-gray-200 dark:border-slate-700 pt-4">
+                  <PersonnelAdvancedFilter
+                    onApply={handleApplyAdvancedFilters}
+                    onClear={handleClearAdvancedFilters}
+                    initialFilters={{
+                      experience_level: filters.experience_level,
+                      role_title: filters.role_title,
+                      skill_filters: filters.skill_filters
+                        ? JSON.parse(filters.skill_filters)
+                        : [],
+                    }}
+                  />
+                </div>
               )}
+
+              <div className="flex items-center justify-between text-sm text-gray-600 dark:text-slate-400">
+                <span>
+                  {data?.pagination?.total || 0} personnel found
+                </span>
+                {hasActiveFilters && (
+                  <span className="text-primary-600 dark:text-primary-400">
+                    Filters applied
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
-          {showAdvancedFilter && (
-            <div className="border-t border-gray-200 dark:border-slate-700 pt-4">
-              <PersonnelAdvancedFilter
-                onApply={handleApplyAdvancedFilters}
-                onClear={handleClearAdvancedFilters}
-                initialFilters={{
-                  experience_level: filters.experience_level,
-                  role_title: filters.role_title,
-                  skill_filters: filters.skill_filters 
-                    ? JSON.parse(filters.skill_filters) 
-                    : [],
-                }}
-              />
-            </div>
-          )}
-
-          <div className="flex items-center justify-between text-sm text-gray-600 dark:text-slate-400">
-            <span>
-              {data?.pagination?.total || 0} personnel found
-            </span>
-            {hasActiveFilters && (
-              <span className="text-primary-600 dark:text-primary-400">
-                Filters applied
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {data?.data?.length === 0 && !isLoading ? (
-        <EmptyState
-          icon={Plus}
-          title="No personnel found"
-          description="Get started by adding your first team member"
-          action={handleCreate}
-          actionLabel="Add Personnel"
-        />
-      ) : (
-        <>
-          <Table
-            columns={columns}
-            data={data?.data || []}
-            isLoading={isLoading}
-          />
-
-          {data?.pagination && (
-            <Pagination
-              currentPage={data.pagination.page}
-              totalPages={data.pagination.totalPages}
-              totalItems={data.pagination.total}
-              itemsPerPage={data.pagination.limit}
-              onPageChange={(page) => setFilters((prev) => ({ ...prev, page }))}
+          {data?.data?.length === 0 && !isLoading ? (
+            <EmptyState
+              icon={Plus}
+              title="No personnel found"
+              description="Get started by adding your first team member"
+              action={handleCreate}
+              actionLabel="Add Personnel"
             />
+          ) : (
+            <>
+              <Table
+                columns={columns}
+                data={data?.data || []}
+                isLoading={isLoading}
+                mobileKeyColumn="name"
+                mobileVisibleColumns={['name', 'role_title', 'experience_level']}
+              />
+
+              {data?.pagination && (
+                <Pagination
+                  currentPage={data.pagination.page}
+                  totalPages={data.pagination.totalPages}
+                  totalItems={data.pagination.total}
+                  itemsPerPage={data.pagination.limit}
+                  onPageChange={(page) => setFilters((prev) => ({ ...prev, page }))}
+                />
+              )}
+            </>
           )}
-        </>
-      )}
         </>
       )}
 
       {activeTab === 'utilization' && (
-        <PersonnelUtilizationChart 
-          utilizationData={utilizationData} 
+        <PersonnelUtilizationChart
+          utilizationData={utilizationData}
           isLoading={isLoadingUtilization}
         />
       )}

@@ -109,7 +109,7 @@ const MatchingInterface = () => {
         await deleteMutation.mutateAsync(allocationToUnassign.id);
         setShowUnassignConfirm(false);
         setAllocationToUnassign(null);
-        
+
         refetchAllocations();
       } catch (error) {
       }
@@ -139,10 +139,10 @@ const MatchingInterface = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Project Matching</h1>
-          <p className="mt-2 text-gray-600 dark:text-slate-400">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-slate-100">Project Matching</h1>
+          <p className="mt-1 sm:mt-2 text-sm sm:text-base text-gray-600 dark:text-slate-400">
             Find the best personnel matches for your projects based on skills and availability
           </p>
         </div>
@@ -150,6 +150,7 @@ const MatchingInterface = () => {
           variant="outline"
           onClick={() => setShowHelp(true)}
           leftIcon={<HelpCircle className="h-4 w-4" />}
+          className="w-full sm:w-auto"
         >
           Help
         </Button>
@@ -160,7 +161,7 @@ const MatchingInterface = () => {
           <Info className="h-5 w-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
             <h4 className="text-sm font-semibold text-green-900 dark:text-green-100 mb-2">
-               How Matching Works
+              How Matching Works
             </h4>
             <div className="grid md:grid-cols-3 gap-4 text-sm text-green-800 dark:text-green-200">
               <div>
@@ -441,9 +442,9 @@ const MatchingInterface = () => {
         </div>
       )}
 
-      <HelpModal 
-        isOpen={showHelp} 
-        onClose={() => setShowHelp(false)} 
+      <HelpModal
+        isOpen={showHelp}
+        onClose={() => setShowHelp(false)}
         topic="matching"
       />
 
@@ -488,7 +489,7 @@ const MatchingInterface = () => {
           </p>
           <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-3 border border-amber-200 dark:border-amber-800">
             <p className="text-sm text-amber-800 dark:text-amber-200">
-               This will remove their allocation and free up their capacity. This action cannot be undone.
+              This will remove their allocation and free up their capacity. This action cannot be undone.
             </p>
           </div>
         </div>

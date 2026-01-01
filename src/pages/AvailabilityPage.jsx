@@ -66,10 +66,10 @@ const AvailabilityPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Availability & Allocation Management</h1>
-          <p className="mt-2 text-gray-600 dark:text-slate-400">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-slate-100">Availability & Allocation Management</h1>
+          <p className="mt-1 sm:mt-2 text-sm sm:text-base text-gray-600 dark:text-slate-400">
             Manage personnel availability and track project allocations to optimize resource utilization
           </p>
         </div>
@@ -77,6 +77,7 @@ const AvailabilityPage = () => {
           variant="outline"
           onClick={() => setShowHelp(true)}
           leftIcon={<HelpCircle className="h-4 w-4" />}
+          className="w-full sm:w-auto"
         >
           Help
         </Button>
@@ -178,7 +179,7 @@ const AvailabilityPage = () => {
                 </p>
                 <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 max-w-md mx-auto text-left">
                   <p className="text-sm text-blue-800 dark:text-blue-200">
-                    <strong> Tip:</strong> Setting availability helps prevent over-allocation 
+                    <strong> Tip:</strong> Setting availability helps prevent over-allocation
                     and ensures personnel are only assigned when they have capacity.
                   </p>
                 </div>
@@ -246,7 +247,7 @@ const AvailabilityPage = () => {
                 </p>
                 <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 max-w-md mx-auto text-left">
                   <p className="text-sm text-blue-800 dark:text-blue-200">
-                    <strong> Tip:</strong> Use the timeline to identify scheduling conflicts 
+                    <strong> Tip:</strong> Use the timeline to identify scheduling conflicts
                     and ensure balanced workload distribution across your team.
                   </p>
                 </div>
@@ -256,9 +257,9 @@ const AvailabilityPage = () => {
         </div>
       )}
 
-      <HelpModal 
-        isOpen={showHelp} 
-        onClose={() => setShowHelp(false)} 
+      <HelpModal
+        isOpen={showHelp}
+        onClose={() => setShowHelp(false)}
         topic={activeTab === 'calendar' ? 'availability' : 'allocation'}
       />
     </div>
