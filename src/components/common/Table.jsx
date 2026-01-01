@@ -92,14 +92,12 @@ const Table = ({
     );
   }
 
-  // Determine which columns to show on mobile
   const mobileColumns = mobileVisibleColumns.length > 0
     ? columns.filter(col => mobileVisibleColumns.includes(col.key))
-    : columns.slice(0, 3); // Default to first 3 columns
+    : columns.slice(0, 3);
 
   const keyColumn = mobileKeyColumn || columns[0]?.key;
 
-  // Mobile Card View (< 768px)
   const MobileCardView = () => (
     <div className="md:hidden space-y-3">
       {sortedData.map((row, rowIndex) => (
@@ -114,7 +112,6 @@ const Table = ({
           onClick={() => onRowClick?.(row)}
         >
           <div className="p-4">
-            {/* Header with key column and actions */}
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-start gap-3 flex-1 min-w-0">
                 {selectable && (
@@ -151,7 +148,6 @@ const Table = ({
               )}
             </div>
 
-            {/* Other visible columns */}
             <div className="space-y-2">
               {mobileColumns
                 .filter(col => col.key !== keyColumn)
@@ -172,7 +168,6 @@ const Table = ({
     </div>
   );
 
-  // Desktop Table View (>= 768px)
   const DesktopTableView = () => (
     <div className="hidden md:block overflow-x-auto bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
       <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">

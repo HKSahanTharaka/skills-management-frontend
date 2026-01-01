@@ -113,7 +113,7 @@ const PersonnelPage = () => {
       setShowForm(false);
       setEditingPersonnel(null);
     } catch (error) {
-
+      console.error('Error in handleFormSubmit:', error);
     }
   };
 

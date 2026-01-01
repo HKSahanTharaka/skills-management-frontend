@@ -95,6 +95,7 @@ const MatchingInterface = () => {
         endDate: selectedProjectData?.end_date,
       });
     } catch (error) {
+      console.error('Error in handleAssign:', error);
     }
   };
 
@@ -112,6 +113,7 @@ const MatchingInterface = () => {
 
         refetchAllocations();
       } catch (error) {
+        console.error('Error in confirmUnassign:', error);
       }
     }
   };

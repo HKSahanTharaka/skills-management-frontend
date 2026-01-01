@@ -101,7 +101,7 @@ const ProjectsPage = () => {
       setShowForm(false);
       setEditingProject(null);
     } catch (error) {
-
+      console.error('Error in handleFormSubmit:', error);
     }
   };
 

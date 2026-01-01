@@ -87,6 +87,7 @@ const SkillsPage = () => {
       setShowForm(false);
       setEditingSkill(null);
     } catch (error) {
+      console.error('Error in handleFormSubmit:', error);
     }
   };
 
