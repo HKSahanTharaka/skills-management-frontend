@@ -12,6 +12,8 @@ const Table = ({
   selectable = false,
   onSelectionChange,
   actions,
+  mobileKeyColumn = null,
+  mobileVisibleColumns = [],
 }) => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [selectedRows, setSelectedRows] = useState(new Set());
@@ -90,8 +92,84 @@ const Table = ({
     );
   }
 
-  return (
-    <div className="overflow-x-auto bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
+  const mobileColumns = mobileVisibleColumns.length > 0
+    ? columns.filter(col => mobileVisibleColumns.includes(col.key))
+    : columns.slice(0, 3);
+
+  const keyColumn = mobileKeyColumn || columns[0]?.key;
+
+  const MobileCardView = () => (
+    <div className="md:hidden space-y-3">
+      {sortedData.map((row, rowIndex) => (
+        <div
+          key={row.id || rowIndex}
+          className={`
+            bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm
+            transition-all duration-200
+            ${onRowClick ? 'cursor-pointer hover:shadow-md hover:border-primary-300 dark:hover:border-primary-600' : ''}
+            ${selectedRows.has(row.id) ? 'ring-2 ring-primary-500 border-primary-500' : ''}
+          `}
+          onClick={() => onRowClick?.(row)}
+        >
+          <div className="p-4">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start gap-3 flex-1 min-w-0">
+                {selectable && (
+                  <input
+                    type="checkbox"
+                    checked={selectedRows.has(row.id)}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      toggleRowSelection(row.id);
+                    }}
+                    className="mt-1 rounded border-gray-300 text-primary-600 focus:ring-primary-500 flex-shrink-0"
+                  />
+                )}
+                <div className="flex-1 min-w-0">
+                  {keyColumn && (
+                    <div className="font-semibold text-gray-900 dark:text-slate-100 text-base mb-1 break-words">
+                      {columns.find(col => col.key === keyColumn)?.render
+                        ? columns.find(col => col.key === keyColumn).render(row[keyColumn], row)
+                        : row[keyColumn]}
+                    </div>
+                  )}
+                </div>
+              </div>
+              {actions && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    actions.onClick(row);
+                  }}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-slate-300 transition-colors p-2 -mr-2 flex-shrink-0"
+                >
+                  <MoreVertical className="h-5 w-5" />
+                </button>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              {mobileColumns
+                .filter(col => col.key !== keyColumn)
+                .map((column) => (
+                  <div key={column.key} className="flex items-start justify-between text-sm gap-2">
+                    <span className="text-gray-500 dark:text-slate-400 font-medium flex-shrink-0">
+                      {column.label}:
+                    </span>
+                    <span className="text-gray-900 dark:text-slate-100 text-right break-words">
+                      {column.render ? column.render(row[column.key], row) : row[column.key]}
+                    </span>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const DesktopTableView = () => (
+    <div className="hidden md:block overflow-x-auto bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
       <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
         <thead className="bg-gray-50 dark:bg-slate-900">
           <tr>
@@ -171,7 +249,13 @@ const Table = ({
       </table>
     </div>
   );
+
+  return (
+    <>
+      <MobileCardView />
+      <DesktopTableView />
+    </>
+  );
 };
 
 export default Table;
-

@@ -2,7 +2,7 @@ import api from './api';
 
 export const matchingService = {
   async findMatchingPersonnel(projectId) {
-    const response = await api.get(`/matching/project/${projectId}`);
+    const response = await api.get(`/matching/projects/${projectId}/personnel`);
     return response.data;
   },
 };
@@ -42,6 +42,11 @@ export const allocationService = {
 
   async getPersonnelUtilization(personnelId) {
     const response = await api.get(`/allocations/personnel/${personnelId}/utilization`);
+    return response.data;
+  },
+
+  async getTeamUtilization(months = 3) {
+    const response = await api.get(`/allocations/team/utilization?months=${months}`);
     return response.data;
   },
 

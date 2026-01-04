@@ -1,5 +1,5 @@
-import { useState, useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Plus, Search } from 'lucide-react';
 import { useProjects, useCreateProject, useUpdateProject, useDeleteProject } from '../hooks/useProjects';
 import { PROJECT_STATUSES } from '../utils/constants';
@@ -18,15 +18,23 @@ import ProjectForm from '../components/projects/ProjectForm';
 
 const ProjectsPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [showForm, setShowForm] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
   const [filters, setFilters] = useState({
-    search: '',
+    search: searchParams.get('search') || '',
     status: '',
     page: 1,
     limit: 12,
   });
+
+  useEffect(() => {
+    const searchParam = searchParams.get('search');
+    if (searchParam && searchParam !== filters.search) {
+      setFilters((prev) => ({ ...prev, search: searchParam, page: 1 }));
+    }
+  }, [searchParams]);
 
   const { data, isLoading } = useProjects(filters);
   const createMutation = useCreateProject();
@@ -93,7 +101,7 @@ const ProjectsPage = () => {
       setShowForm(false);
       setEditingProject(null);
     } catch (error) {
-      
+      console.error('Error in handleFormSubmit:', error);
     }
   };
 
@@ -103,12 +111,12 @@ const ProjectsPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Projects Management</h1>
-          <p className="mt-2 text-gray-600 dark:text-slate-400">Manage your projects and track progress</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-slate-100">Projects Management</h1>
+          <p className="mt-1 sm:mt-2 text-sm sm:text-base text-gray-600 dark:text-slate-400">Manage your projects and track progress</p>
         </div>
-        <Button variant="primary" onClick={handleCreate} leftIcon={<Plus className="h-4 w-4" />}>
+        <Button variant="primary" onClick={handleCreate} leftIcon={<Plus className="h-4 w-4" />} className="w-full sm:w-auto">
           New Project
         </Button>
       </div>

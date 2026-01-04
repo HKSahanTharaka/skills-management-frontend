@@ -21,7 +21,7 @@ const Layout = ({ children }) => {
         <Sidebar />
 
         <main
-          className="flex-1 p-6 lg:p-8 transition-all duration-300 lg:ml-64"
+          className="flex-1 p-4 sm:p-6 lg:p-8 transition-all duration-300 lg:ml-64"
         >
           <div className="max-w-7xl mx-auto">
             {children}

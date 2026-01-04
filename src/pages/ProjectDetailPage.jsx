@@ -41,6 +41,7 @@ const ProjectDetailPage = () => {
       });
       setShowEdit(false);
     } catch (error) {
+      console.error('Error in handleUpdate:', error);
     }
   };
 
@@ -49,6 +50,7 @@ const ProjectDetailPage = () => {
       await deleteMutation.mutateAsync(id);
       navigate('/projects');
     } catch (error) {
+      console.error('Error in handleDelete:', error);
     }
   };
 

@@ -41,8 +41,20 @@ export const useCreateAvailability = () => {
       toast.success('Availability period created');
     },
     onError: (error) => {
-      const message = error.response?.data?.error?.message || 'Failed to create availability';
-      toast.error(message);
+      const errorData = error.response?.data?.error;
+      const message = errorData?.message || 'Failed to create availability';
+      const hint = errorData?.hint;
+      
+      toast.error(message, { duration: 4000 });
+      if (hint) {
+        toast(hint, { 
+          duration: 5000,
+          style: {
+            background: '#3B82F6',
+            color: '#fff',
+          },
+        });
+      }
     },
   });
 };
@@ -62,8 +74,20 @@ export const useUpdateAvailability = () => {
       toast.success('Availability updated');
     },
     onError: (error) => {
-      const message = error.response?.data?.error?.message || 'Failed to update availability';
-      toast.error(message);
+      const errorData = error.response?.data?.error;
+      const message = errorData?.message || 'Failed to update availability';
+      const hint = errorData?.hint;
+      
+      toast.error(message, { duration: 4000 });
+      if (hint) {
+        toast(hint, { 
+          duration: 5000,
+          style: {
+            background: '#3B82F6',
+            color: '#fff',
+          },
+        });
+      }
     },
   });
 };
@@ -117,6 +141,16 @@ export const usePersonnelUtilization = (personnelId) => {
   });
 };
 
+export const useTeamUtilization = (months = 3) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.ALLOCATIONS, 'team-utilization', months],
+    queryFn: async () => {
+      const result = await allocationService.getTeamUtilization(months);
+      return result.data || [];
+    },
+  });
+};
+
 export const useAllocateToProject = () => {
   const queryClient = useQueryClient();
 
@@ -141,8 +175,20 @@ export const useAllocateToProject = () => {
       toast.success('Personnel allocated to project successfully');
     },
     onError: (error) => {
-      const message = error.response?.data?.error?.message || 'Failed to allocate personnel';
-      toast.error(message);
+      const errorData = error.response?.data?.error;
+      const message = errorData?.message || 'Failed to allocate personnel';
+      const hint = errorData?.hint;
+      
+      toast.error(message, { duration: 5000 });
+      if (hint) {
+        toast(hint, { 
+          duration: 6000,
+          style: {
+            background: '#3B82F6',
+            color: '#fff',
+          },
+        });
+      }
     },
   });
 };
@@ -158,8 +204,20 @@ export const useCreateAllocation = () => {
       toast.success('Personnel allocated successfully');
     },
     onError: (error) => {
-      const message = error.response?.data?.error?.message || 'Failed to create allocation';
-      toast.error(message);
+      const errorData = error.response?.data?.error;
+      const message = errorData?.message || 'Failed to create allocation';
+      const hint = errorData?.hint;
+      
+      toast.error(message, { duration: 5000 });
+      if (hint) {
+        toast(hint, { 
+          duration: 6000,
+          style: {
+            background: '#3B82F6',
+            color: '#fff',
+          },
+        });
+      }
     },
   });
 };
@@ -187,11 +245,25 @@ export const useDeleteAllocation = () => {
     mutationFn: allocationService.delete,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ALLOCATIONS] });
-      toast.success('Allocation deleted');
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MATCHING] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PROJECTS] });
+      toast.success('Personnel unassigned from project successfully');
     },
     onError: (error) => {
-      const message = error.response?.data?.error?.message || 'Failed to delete allocation';
-      toast.error(message);
+      const errorData = error.response?.data?.error;
+      const message = errorData?.message || 'Failed to unassign personnel';
+      const hint = errorData?.hint;
+      
+      toast.error(message, { duration: 4000 });
+      if (hint) {
+        toast(hint, { 
+          duration: 5000,
+          style: {
+            background: '#3B82F6',
+            color: '#fff',
+          },
+        });
+      }
     },
   });
 };

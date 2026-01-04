@@ -1,4 +1,5 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Plus, Search, Edit, Trash2 } from 'lucide-react';
 import { useSkills, useCreateSkill, useUpdateSkill, useDeleteSkill } from '../hooks/useSkills';
 import { SKILL_CATEGORIES } from '../utils/constants';
@@ -15,16 +16,24 @@ import Loading from '../components/common/Loading';
 import SkillForm from '../components/skills/SkillForm';
 
 const SkillsPage = () => {
+  const [searchParams] = useSearchParams();
   const permissions = usePermissions();
   const [showForm, setShowForm] = useState(false);
   const [editingSkill, setEditingSkill] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
   const [filters, setFilters] = useState({
-    search: '',
+    search: searchParams.get('search') || '',
     category: '',
     page: 1,
     limit: 10,
   });
+
+  useEffect(() => {
+    const searchParam = searchParams.get('search');
+    if (searchParam && searchParam !== filters.search) {
+      setFilters((prev) => ({ ...prev, search: searchParam, page: 1 }));
+    }
+  }, [searchParams]);
 
   const { data, isLoading } = useSkills(filters);
   const createMutation = useCreateSkill();
@@ -78,6 +87,7 @@ const SkillsPage = () => {
       setShowForm(false);
       setEditingSkill(null);
     } catch (error) {
+      console.error('Error in handleFormSubmit:', error);
     }
   };
 
@@ -159,13 +169,13 @@ const SkillsPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Skills Management</h1>
-          <p className="mt-2 text-gray-600 dark:text-slate-400">Manage skills available in the system</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-slate-100">Skills Management</h1>
+          <p className="mt-1 sm:mt-2 text-sm sm:text-base text-gray-600 dark:text-slate-400">Manage skills available in the system</p>
         </div>
         {permissions.canCreateSkill && (
-          <Button variant="primary" onClick={handleCreate} leftIcon={<Plus className="h-4 w-4" />}>
+          <Button variant="primary" onClick={handleCreate} leftIcon={<Plus className="h-4 w-4" />} className="w-full sm:w-auto">
             Add Skill
           </Button>
         )}
@@ -217,6 +227,8 @@ const SkillsPage = () => {
             columns={columns}
             data={data?.data || []}
             isLoading={isLoading}
+            mobileKeyColumn="skill_name"
+            mobileVisibleColumns={['skill_name', 'category']}
           />
 
           {data?.pagination && (

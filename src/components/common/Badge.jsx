@@ -16,6 +16,7 @@ const Badge = ({
     danger: 'bg-danger-100 text-danger-800',
     info: 'bg-primary-100 text-primary-800',
     gray: 'bg-gray-100 text-gray-800',
+    default: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
   };
 
   const sizes = {

@@ -54,6 +54,7 @@ const PersonnelDetailPage = () => {
       });
       setShowEditModal(false);
     } catch (error) {
+      console.error('Error in handleUpdate:', error);
     }
   };
 
@@ -64,6 +65,7 @@ const PersonnelDetailPage = () => {
         skillId: skillId,
       });
     } catch (error) {
+      console.error('Error in handleRemoveSkill:', error);
     }
   };
 
@@ -383,6 +385,7 @@ const AddSkillModal = ({ isOpen, onClose, personnelId, allSkills, existingSkills
       setYearsOfExperience(0);
       onClose();
     } catch (error) {
+      console.error('Error in handleSubmit:', error);
     }
   };
 

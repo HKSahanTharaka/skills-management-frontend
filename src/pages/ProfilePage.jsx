@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
-import { User, Mail, Calendar, Save, Lock, Eye, EyeOff, Briefcase, Award, FileText } from 'lucide-react';
+import { User, Mail, Calendar, Save, Lock, Eye, EyeOff, Briefcase, Award, FileText, Upload, X } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import api from '../services/api';
+import { cloudinaryService } from '../services/cloudinary.service';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
@@ -15,12 +16,14 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { user: authUser, setUser } = useAuthStore();
   const queryClient = useQueryClient();
-  
+
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+  const [imageUrl, setImageUrl] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+
   const [formData, setFormData] = useState({
     email: '',
     currentPassword: '',
@@ -38,6 +41,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (profile) {
+      setImageUrl(profile.profile_image_url || '');
       setFormData(prev => ({
         ...prev,
         email: profile.email || '',
@@ -68,11 +72,41 @@ const ProfilePage = () => {
     },
   });
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size should be less than 5MB');
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const url = await cloudinaryService.uploadImage(file);
+      setImageUrl(url);
+      toast.success('Image uploaded successfully');
+    } catch (error) {
+      toast.error('Failed to upload image');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImageUrl('');
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const updateData = {};
-    
+
     if (formData.email !== profile?.email) {
       updateData.email = formData.email;
     }
@@ -97,6 +131,10 @@ const ProfilePage = () => {
 
       updateData.currentPassword = formData.currentPassword;
       updateData.newPassword = formData.newPassword;
+    }
+
+    if (imageUrl !== (profile?.profile_image_url || '')) {
+      updateData.profile_image_url = imageUrl || null;
     }
 
     if (Object.keys(updateData).length === 0) {
@@ -141,17 +179,42 @@ const ProfilePage = () => {
         <div className="lg:col-span-1">
           <Card>
             <div className="text-center">
-              {profile?.personnel?.profile_image_url ? (
-                <img
-                  src={profile.personnel.profile_image_url}
-                  alt={profile.personnel.name}
-                  className="h-32 w-32 rounded-full object-cover border-4 border-gray-100 dark:border-slate-700 mx-auto"
-                />
+              {imageUrl || profile?.profile_image_url || profile?.personnel?.profile_image_url ? (
+                <div className="relative inline-block">
+                  <img
+                    src={imageUrl || profile?.profile_image_url || profile?.personnel?.profile_image_url}
+                    alt="Profile"
+                    className="h-32 w-32 rounded-full object-cover border-4 border-gray-100 dark:border-slate-700 mx-auto"
+                  />
+                  {(imageUrl || profile?.profile_image_url) && (
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      className="absolute -top-2 -right-2 bg-danger-600 text-white rounded-full p-1 hover:bg-danger-700 transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
               ) : (
                 <div className="h-32 w-32 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center border-4 border-gray-50 dark:border-slate-700 mx-auto">
                   <User className="h-16 w-16 text-primary-600 dark:text-primary-400" />
                 </div>
               )}
+
+              <label className="mt-3 cursor-pointer inline-block">
+                <span className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium">
+                  {isUploading ? 'Uploading...' : (imageUrl || profile?.profile_image_url) ? 'Change Photo' : 'Upload Photo'}
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageUpload}
+                  disabled={isUploading}
+                />
+              </label>
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">JPG, PNG or GIF (max 5MB)</p>
 
               <div className="mt-4">
                 {profile?.personnel?.name && (
