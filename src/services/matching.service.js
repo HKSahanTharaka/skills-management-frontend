@@ -2,7 +2,7 @@ import api from './api';
 
 export const matchingService = {
   async findMatchingPersonnel(projectId) {
-    const response = await api.get(`/matching/project/${projectId}`);
+    const response = await api.get(`/matching/projects/${projectId}/personnel`);
     return response.data;
   },
 };
