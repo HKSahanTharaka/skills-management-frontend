@@ -178,45 +178,47 @@ const ProfilePage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
           <Card>
-            <div className="text-center">
+            <div className="flex flex-col items-center text-center">
               {imageUrl || profile?.profile_image_url || profile?.personnel?.profile_image_url ? (
                 <div className="relative inline-block">
                   <img
                     src={imageUrl || profile?.profile_image_url || profile?.personnel?.profile_image_url}
                     alt="Profile"
-                    className="h-32 w-32 rounded-full object-cover border-4 border-gray-100 dark:border-slate-700 mx-auto"
+                    className="h-32 w-32 rounded-full object-cover border-4 border-gray-100 dark:border-slate-700"
                   />
                   {(imageUrl || profile?.profile_image_url) && (
                     <button
                       type="button"
                       onClick={handleRemoveImage}
-                      className="absolute -top-2 -right-2 bg-danger-600 text-white rounded-full p-1 hover:bg-danger-700 transition-colors"
+                      className="absolute -top-2 -right-2 bg-danger-600 text-white rounded-full p-1.5 hover:bg-danger-700 transition-colors shadow-md"
                     >
                       <X className="h-4 w-4" />
                     </button>
                   )}
                 </div>
               ) : (
-                <div className="h-32 w-32 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center border-4 border-gray-50 dark:border-slate-700 mx-auto">
+                <div className="h-32 w-32 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center border-4 border-gray-50 dark:border-slate-700">
                   <User className="h-16 w-16 text-primary-600 dark:text-primary-400" />
                 </div>
               )}
 
-              <label className="mt-3 cursor-pointer inline-block">
-                <span className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium">
-                  {isUploading ? 'Uploading...' : (imageUrl || profile?.profile_image_url) ? 'Change Photo' : 'Upload Photo'}
-                </span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleImageUpload}
-                  disabled={isUploading}
-                />
-              </label>
-              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">JPG, PNG or GIF (max 5MB)</p>
+              <div className="mt-4 flex flex-col items-center">
+                <label className="cursor-pointer">
+                  <span className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium">
+                    {isUploading ? 'Uploading...' : (imageUrl || profile?.profile_image_url) ? 'Change Photo' : 'Upload Photo'}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                    disabled={isUploading}
+                  />
+                </label>
+                <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">JPG, PNG or GIF (max 5MB)</p>
+              </div>
 
-              <div className="mt-4">
+              <div className="mt-6 w-full">
                 {profile?.personnel?.name && (
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                     {profile.personnel.name}
@@ -228,8 +230,8 @@ const ProfilePage = () => {
                 </div>
               </div>
 
-              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-slate-700 space-y-3">
-                <div className="flex items-center gap-3 text-sm">
+              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-slate-700 w-full">
+                <div className="flex items-center justify-center gap-3 text-sm">
                   <div className="p-2 bg-gray-100 dark:bg-slate-700 rounded-lg">
                     <Calendar className="h-4 w-4 text-gray-600 dark:text-slate-400" />
                   </div>
