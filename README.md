@@ -55,7 +55,9 @@ npm run test:e2e     # Run E2E tests
 
 ## Backend Setup
 
-Make sure the backend API is running on port 5000 (or update `VITE_API_BASE_URL` in your `.env` file).
+Make sure the backend API is running on port 5000 (or update VITE_API_BASE_URL in your .env file).
+
+Backend repository: https://github.com/HKSahanTharaka/skills-management-backend
 
 The backend needs MySQL running and properly configured. Check the backend repo for database setup instructions.
 
